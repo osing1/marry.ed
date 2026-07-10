@@ -125,8 +125,9 @@
             <img src="https://mer.id/undangan/vinyl.svg" id="vinyl-icon" class="w-full h-full animate-[spinSlow_4s_linear_infinite]" alt="musik" style="animation-play-state: paused;"/>
         </div>
     </div>
-    <!-- Allow cross origin media fetch to prevent file protocol errors on local test -->
-    <audio id="bg-music" src="https://api.mer.id/api/root_media/music/music-bg-theme-30b158de-8d43-4072-8764-130469edb1b0.mp3" loop preload="auto" crossorigin="anonymous" class="hidden"></audio>
+    
+    <!-- Audio Tag: Removed crossorigin attribute to fix CORS issue -->
+    <audio id="bg-music" src="https://api.mer.id/api/root_media/music/music-bg-theme-30b158de-8d43-4072-8764-130469edb1b0.mp3" loop preload="auto" class="hidden"></audio>
 
     <!-- 1. COVER PAGE -->
     <div id="cover-page" class="fixed inset-0 z-50 transition-transform duration-[1200ms] ease-in-out bg-black overflow-hidden flex flex-col">
@@ -229,23 +230,44 @@
         </div>
         <div class="fixed inset-0 bg-black/50 lg:backdrop-blur z-[-1]"></div>
         
-        <!-- 3. OPENING SLIDESHOW -->
+        <!-- 3. OPENING SLIDESHOW & COUNTDOWN -->
         <section id="sampul" class="relative w-full h-[100dvh] flex flex-col justify-end text-white overflow-hidden bg-zinc-900">
             <div class="absolute inset-0 z-0">
                 <img src="https://mer.id/undangan/lake/foto-2.jpg" class="bg-slide active">
                 <img src="https://mer.id/undangan/lake/foto-3.jpg" class="bg-slide">
                 <img src="https://mer.id/undangan/lake/foto-4.jpg" class="bg-slide">
                 <img src="https://mer.id/undangan/lake/foto-5.jpg" class="bg-slide">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
             </div>
             
-            <div class="relative z-10 w-full p-6 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-end gap-10 lg:gap-4 pb-16">
-                <div class="flex flex-col gap-4 max-lg:items-center">
-                    <p class="font-body text-base lg:text-lg tracking-widest">Save The Date</p>
+            <div class="relative z-10 w-full p-6 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-end gap-10 lg:gap-4 pb-20">
+                <div class="flex flex-col gap-6 max-lg:items-center">
+                    <p class="font-body text-base lg:text-lg tracking-widest uppercase">Save The Date</p>
+                    
+                    <!-- COUNTDOWN TIMER (WIB) -->
+                    <div id="countdown-container" class="flex gap-4 text-center">
+                        <div class="flex flex-col items-center bg-white/10 border border-white/20 backdrop-blur rounded-lg p-3 w-16 lg:w-20 shadow-lg">
+                            <span id="hari" class="text-2xl lg:text-3xl font-title">00</span>
+                            <span class="text-[10px] uppercase tracking-widest opacity-80 mt-1">Hari</span>
+                        </div>
+                        <div class="flex flex-col items-center bg-white/10 border border-white/20 backdrop-blur rounded-lg p-3 w-16 lg:w-20 shadow-lg">
+                            <span id="jam" class="text-2xl lg:text-3xl font-title">00</span>
+                            <span class="text-[10px] uppercase tracking-widest opacity-80 mt-1">Jam</span>
+                        </div>
+                        <div class="flex flex-col items-center bg-white/10 border border-white/20 backdrop-blur rounded-lg p-3 w-16 lg:w-20 shadow-lg">
+                            <span id="menit" class="text-2xl lg:text-3xl font-title">00</span>
+                            <span class="text-[10px] uppercase tracking-widest opacity-80 mt-1">Menit</span>
+                        </div>
+                        <div class="flex flex-col items-center bg-white/10 border border-white/20 backdrop-blur rounded-lg p-3 w-16 lg:w-20 shadow-lg">
+                            <span id="detik" class="text-2xl lg:text-3xl font-title">00</span>
+                            <span class="text-[10px] uppercase tracking-widest opacity-80 mt-1">Detik</span>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="flex flex-col lg:text-right items-end max-lg:items-center max-lg:mb-20">
-                    <p class="font-body font-bold text-sm tracking-widest mb-2">Undangan Pernikahan</p>
-                    <h1 class="font-title text-4xl md:text-5xl font-normal leading-none text-white">Chyntia & Rian</h1>
+                    <p class="font-body font-bold text-sm tracking-widest mb-2 uppercase">Undangan Pernikahan</p>
+                    <h1 class="font-title text-5xl md:text-6xl font-normal leading-none text-white drop-shadow-md">Chyntia & Rian</h1>
                 </div>
             </div>
         </section>
@@ -308,7 +330,7 @@
             <div class="relative z-10 w-full max-w-4xl mx-auto flex flex-col gap-10">
                 
                 <!-- Resepsi Card -->
-                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal rounded-2xl">
                     <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col gap-8">
                         <div class="absolute -top-8 -left-8 lg:-top-12 lg:-left-12 bg-white text-black text-[10px] lg:text-xs py-3 px-6 lg:py-4 lg:px-8 rounded-br-2xl shadow-xl z-20 font-bold tracking-widest uppercase">
@@ -347,14 +369,15 @@
                         </div>
 
                         <!-- RSVP Button -->
-                        <button class="mt-4 w-full md:w-auto px-6 py-4 bg-transparent border border-white text-white hover:bg-white/20 transition-colors uppercase tracking-[0.2em] text-xs font-bold flex items-center justify-center gap-3">
+                        <button class="mt-4 w-full md:w-auto px-6 py-4 bg-transparent border border-white text-white hover:bg-white/20 transition-colors uppercase tracking-[0.2em] text-xs font-bold flex items-center justify-center gap-3 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9 6l9 -6l-9 -6l-9 6"></path><path d="M21 9v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"></path><path d="M3 19l6 -6"></path><path d="M15 13l6 6"></path></svg>
                             Konfirmasi Kehadiran
                         </button>
                     </div>
                 </div>
 
                 <!-- Akad Nikah -->
-                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal rounded-2xl">
                     <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col gap-6">
                         <div class="flex justify-between items-start">
@@ -389,7 +412,7 @@
                 </div>
 
                 <!-- Ngunduh Mantu -->
-                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal rounded-2xl">
                     <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col gap-6">
                         <div class="flex justify-between items-start">
@@ -424,7 +447,7 @@
                 </div>
 
                 <!-- Live Streaming -->
-                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal rounded-2xl">
                     <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col gap-6">
                         <div class="flex flex-col gap-2">
@@ -581,7 +604,7 @@
                 </div>
 
                 <!-- Konfirmasi Transfer Button -->
-                <button class="w-full h-12 border border-white/50 hover:bg-white/10 transition-colors text-white font-medium mb-12">
+                <button class="w-full h-12 border border-white/50 hover:bg-white/10 transition-colors text-white font-medium mb-12 rounded-md">
                     Konfirmasi Transfer
                 </button>
 
@@ -595,7 +618,7 @@
                 </div>
                 
                 <!-- Konfirmasi Kirim Kado Button -->
-                <button class="w-full h-12 border border-white/50 hover:bg-white/10 transition-colors text-white font-medium mt-4">
+                <button class="w-full h-12 border border-white/50 hover:bg-white/10 transition-colors text-white font-medium mt-4 rounded-md">
                     Konfirmasi Kirim Kado
                 </button>
             </div>
@@ -614,8 +637,9 @@
                 </div>
 
                 <form class="w-full flex flex-col gap-4">
-                    <textarea rows="4" placeholder="Tulis ucapan untuk kedua mempelai" class="border border-color1/30 focus:border-color1 bg-white text-color1 p-4 w-full outline-none transition rounded-none shadow-sm font-body text-sm resize-none"></textarea>
-                    <button type="button" class="w-full h-14 bg-color1 hover:bg-color1/90 text-white font-bold tracking-widest uppercase transition rounded-none text-sm">Kirim</button>
+                    <input type="text" placeholder="Nama Anda" class="border border-color1/30 focus:border-color1 bg-white text-color1 p-4 w-full outline-none transition rounded-md shadow-sm font-body text-sm" />
+                    <textarea rows="4" placeholder="Tulis ucapan untuk kedua mempelai" class="border border-color1/30 focus:border-color1 bg-white text-color1 p-4 w-full outline-none transition rounded-md shadow-sm font-body text-sm resize-none"></textarea>
+                    <button type="button" class="w-full h-14 bg-color1 hover:bg-color1/90 text-white font-bold tracking-widest uppercase transition rounded-md text-sm">Kirim</button>
                 </form>
             </div>
         </section>
@@ -671,8 +695,8 @@
             
             // SVG Icons for bottom mobile nav
             const iconWrapperBottom = document.getElementById('music-icon-wrapper-bottom');
-            const svgMusicOn = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path></svg>`;
-            const svgMusicOff = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M14.42 14.45a3 3 0 1 0 4.138 4.119"></path><path d="M9 17v-8m0 -4v-1h10v11"></path><path d="M12 8h7"></path><path d="M3 3l18 18"></path></svg>`;
+            const svgMusicOn = `<svg id="icon-music-on-bottom" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path></svg>`;
+            const svgMusicOff = `<svg id="icon-music-off-bottom" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M14.42 14.45a3 3 0 1 0 4.138 4.119"></path><path d="M9 17v-8m0 -4v-1h10v11"></path><path d="M12 8h7"></path><path d="M3 3l18 18"></path></svg>`;
 
             let isMusicPlaying = false;
 
@@ -682,7 +706,8 @@
                     vinylIcon.style.animationPlayState = 'paused';
                     if(iconWrapperBottom) iconWrapperBottom.innerHTML = svgMusicOff;
                 } else {
-                    audio.play();
+                    // Added catch for browser autoplay policies
+                    audio.play().catch(e => console.log("Audio play blocked by browser:", e));
                     vinylIcon.style.animationPlayState = 'running';
                     if(iconWrapperBottom) iconWrapperBottom.innerHTML = svgMusicOn;
                 }
@@ -740,6 +765,32 @@
             });
 
             revealElements.forEach(el => observer.observe(el));
+
+            /* 6. Countdown Timer Logic (WIB / GMT+0700) */
+            // Target: 10 Agustus 2026, 10:00:00 WIB
+            const countDownDate = new Date("Aug 10, 2026 10:00:00 GMT+0700").getTime();
+
+            const countdownInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = countDownDate - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById("countdown-container").innerHTML = "<div class='text-xl lg:text-2xl font-bold uppercase tracking-widest mt-4 bg-white/20 px-6 py-3 rounded-lg backdrop-blur'>Acara Sedang Berlangsung</div>";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Update DOM (Pad single digits with zero)
+                document.getElementById("hari").innerText = days.toString().padStart(2, '0');
+                document.getElementById("jam").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("menit").innerText = minutes.toString().padStart(2, '0');
+                document.getElementById("detik").innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
         });
     </script>
 </body>
