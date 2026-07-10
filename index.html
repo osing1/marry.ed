@@ -450,16 +450,16 @@
     <!-- JavaScript -->
     <script>
         // ================================================================
-        // KONFIGURASI
-        // ================================================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbw7CYsi7CJMKtm3lgMNzj_wF-mbcE80d8beCZFgtsm07_1t8m55ikLNMlOBL_ogVI2Kgw/exec';
+// KONFIGURASI
+// ================================================================
+const API_URL = 'https://script.google.com/macros/s/AKfycbw7CYsi7CJMKtm3lgMNzj_wF-mbcE80d8beCZFgtsm07_1t8m55ikLNMlOBL_ogVI2Kgw/exec';
 
-        // ================================================================
-        // 1. FETCH DATA
-        // ================================================================
-        let appData = null;
+// ================================================================
+// 1. FETCH DATA
+// ================================================================
+let appData = null;
 
-        async function loadData() {
+async function loadData() {
     try {
         const res = await fetch(API_URL, {
             method: 'GET',
@@ -484,579 +484,586 @@
     }
 }
 
-        // ================================================================
-        // 2. RENDER SEMUA KONTEN
-        // ================================================================
-        function renderAll(data) {
-            const s = data.settings || {};
-            const brides = data.brides || [];
-            const events = data.events || [];
-            const galleries = data.galleries || [];
-            const stories = data.stories || [];
-            const greetings = data.greetings || [];
-            const gifts = data.gifts || []; // <--- Ambil data gifts
+// ================================================================
+// 2. RENDER SEMUA KONTEN
+// ================================================================
+function renderAll(data) {
+    const s = data.settings || {};
+    const brides = data.brides || [];
+    const events = data.events || [];
+    const galleries = data.galleries || [];
+    const stories = data.stories || [];
+    const greetings = data.greetings || [];
+    const gifts = data.gifts || [];
 
-            // A. Cover
-            document.getElementById('cover-title').textContent = s.title || 'Chyntia & Rian';
-            document.getElementById('cover-date').textContent = s.date ? new Date(s.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '10 Agustus 2026';
-            document.getElementById('cover-img-1').src = s.cover_image_1 || '';
-            document.getElementById('cover-img-2').src = s.cover_image_2 || '';
-            document.getElementById('cover-img-3').src = s.cover_image_3 || '';
+    // A. Cover
+    document.getElementById('cover-title').textContent = s.title || 'Chyntia & Rian';
+    document.getElementById('cover-date').textContent = s.date ? new Date(s.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '10 Agustus 2026';
+    document.getElementById('cover-img-1').src = s.cover_image_1 || '';
+    document.getElementById('cover-img-2').src = s.cover_image_2 || '';
+    document.getElementById('cover-img-3').src = s.cover_image_3 || '';
 
-            // B. Audio
-            const audio = document.getElementById('bg-music');
-            if (s.music_url) audio.src = s.music_url;
+    // B. Audio
+    const audio = document.getElementById('bg-music');
+    if (s.music_url) audio.src = s.music_url;
 
-            // C. Warna & Font
-            if (s.color_1) document.documentElement.style.setProperty('--color1', s.color_1);
-            if (s.color_2) document.documentElement.style.setProperty('--color2', s.color_2);
-            document.querySelectorAll('.btn-gradient').forEach(btn => {
-                btn.style.background = `linear-gradient(90deg, ${s.color_2 || '#005FF4'} 0%, ${s.color_1 || '#159CFF'} 100%)`;
-            });
+    // C. Warna & Font
+    if (s.color_1) document.documentElement.style.setProperty('--color1', s.color_1);
+    if (s.color_2) document.documentElement.style.setProperty('--color2', s.color_2);
+    document.querySelectorAll('.btn-gradient').forEach(btn => {
+        btn.style.background = `linear-gradient(90deg, ${s.color_2 || '#005FF4'} 0%, ${s.color_1 || '#159CFF'} 100%)`;
+    });
 
-            // D. Quote
-            document.getElementById('quote-arab').textContent = s.quote_arab || '';
-            document.getElementById('quote-latin').textContent = s.quote_latin || '';
-            document.getElementById('quote-source').textContent = s.quote_source || '';
+    // D. Quote
+    document.getElementById('quote-arab').textContent = s.quote_arab || '';
+    document.getElementById('quote-latin').textContent = s.quote_latin || '';
+    document.getElementById('quote-source').textContent = s.quote_source || '';
 
-            // E. Mempelai
-            const brideWanita = brides.find(b => b.type === 'wanita');
-            const bridePria = brides.find(b => b.type === 'pria');
-            if (brideWanita) {
-                document.getElementById('bride-name-1').textContent = brideWanita.name;
-                document.getElementById('bride-desc-1').innerHTML = `Putri dari Bapak ${brideWanita.father} & Ibu ${brideWanita.mother}`;
-                document.getElementById('bride-address-1').textContent = brideWanita.address;
-                document.getElementById('bride-img-1').src = brideWanita.image || '';
+    // E. Mempelai
+    const brideWanita = brides.find(b => b.type === 'wanita');
+    const bridePria = brides.find(b => b.type === 'pria');
+    if (brideWanita) {
+        document.getElementById('bride-name-1').textContent = brideWanita.name;
+        document.getElementById('bride-desc-1').innerHTML = `Putri dari Bapak ${brideWanita.father} & Ibu ${brideWanita.mother}`;
+        document.getElementById('bride-address-1').textContent = brideWanita.address;
+        document.getElementById('bride-img-1').src = brideWanita.image || '';
+    }
+    if (bridePria) {
+        document.getElementById('bride-name-2').textContent = bridePria.name;
+        document.getElementById('bride-desc-2').innerHTML = `Putra dari Bapak ${bridePria.father} & Ibu ${bridePria.mother}`;
+        document.getElementById('bride-address-2').textContent = bridePria.address;
+        document.getElementById('bride-img-2').src = bridePria.image || '';
+    }
+
+    document.getElementById('main-title').textContent = s.title || 'Chyntia & Rian';
+    document.getElementById('main-date').textContent = s.date ? new Date(s.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '10 Agustus 2026';
+
+    // F. Countdown
+    let targetDate = s.date ? new Date(s.date) : new Date('2026-08-10');
+    startCountdown(targetDate);
+
+    // G. Events (Acara)
+    const eventsContainer = document.getElementById('events-container');
+    if (eventsContainer) {
+        let html = '';
+        const publishedEvents = events.filter(e => e.is_published !== false);
+        publishedEvents.forEach(ev => {
+            const dateStr = ev.date ? new Date(ev.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            let timeStart = ev.time_start || '';
+            let timeEnd = ev.time_end || '';
+            if (timeEnd && timeEnd.toLowerCase() === 'selesai') {
+                timeEnd = 'Selesai';
             }
-            if (bridePria) {
-                document.getElementById('bride-name-2').textContent = bridePria.name;
-                document.getElementById('bride-desc-2').innerHTML = `Putra dari Bapak ${bridePria.father} & Ibu ${bridePria.mother}`;
-                document.getElementById('bride-address-2').textContent = bridePria.address;
-                document.getElementById('bride-img-2').src = bridePria.image || '';
-            }
+            const mapLink = ev.map_link || '';
 
-            document.getElementById('main-title').textContent = s.title || 'Chyntia & Rian';
-            document.getElementById('main-date').textContent = s.date ? new Date(s.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '10 Agustus 2026';
-
-            // F. Countdown
-            let targetDate = s.date ? new Date(s.date) : new Date('2026-08-10');
-            startCountdown(targetDate);
-
-            // G. Events (Acara)
-            const eventsContainer = document.getElementById('events-container');
-            if (eventsContainer) {
-                let html = '';
-                const publishedEvents = events.filter(e => e.is_published !== false);
-                publishedEvents.forEach(ev => {
-                    const dateStr = ev.date ? new Date(ev.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
-                    let timeStart = ev.time_start || '';
-                    let timeEnd = ev.time_end || '';
-                    if (timeEnd && timeEnd.toLowerCase() === 'selesai') {
-                        timeEnd = 'Selesai';
-                    }
-                    const mapLink = ev.map_link || '';
-
-                    html += `
-                        <div class="reveal-elem relative overflow-hidden p-8 rounded-[2rem] glass-card-dark text-white shadow-2xl event-card-radial">
-                            <div class="relative z-10 flex flex-col gap-4 text-center">
-                                <h3 class="text-3xl lg:text-4xl font-title">${ev.title}</h3>
-                                <p class="font-bold">${dateStr}</p>
-                                <p class="opacity-70">${timeStart}${timeEnd ? ' - ' + timeEnd : ''} WIB</p>
-                                <p class="font-semibold">${ev.venue}</p>
-                                <p class="text-sm opacity-70">${ev.address}</p>
-                                ${mapLink ? `<a href="${mapLink}" target="_blank" class="text-color1 underline text-sm inline-flex items-center gap-1 justify-center mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                    Lihat Google Maps
-                                </a>` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                eventsContainer.innerHTML = html;
-            }
-
-            // ============================================================
-            // H. GIFTS (Kirim Hadiah / Rekening) - BARU!
-            // ============================================================
-            const giftsContainer = document.getElementById('gifts-container');
-            if (giftsContainer) {
-                const publishedGifts = gifts.filter(g => g.is_published !== false);
-                if (publishedGifts.length > 0) {
-                    let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">';
-                    publishedGifts.forEach(g => {
-                        // Tentukan icon berdasarkan type
-                        let icon = '🏦';
-                        if (g.type && g.type.toLowerCase() === 'gift') icon = '🎁';
-                        else if (g.type && g.type.toLowerCase() === 'bank') icon = '🏦';
-                        
-                        html += `
-                            <div class="glass-card-dark p-5 rounded-xl text-center border border-white/10 hover:border-color1/50 transition-colors duration-300">
-                                <div class="text-2xl mb-1">${icon}</div>
-                                <p class="text-xs opacity-60 uppercase tracking-wider">${g.type || 'Bank'}</p>
-                                <p class="font-bold text-lg mt-1 text-white">${g.bank_name || ''}</p>
-                                <p class="text-sm font-mono tracking-wider bg-white/10 py-1.5 px-3 rounded inline-block mt-2 text-white/90">${g.account_number || ''}</p>
-                                <p class="text-xs opacity-80 mt-2">a.n. ${g.account_owner || ''}</p>
-                            </div>
-                        `;
-                    });
-                    html += '</div>';
-                    giftsContainer.innerHTML = html;
-                } else {
-                    giftsContainer.innerHTML = `<p class="text-center text-sm opacity-50">Informasi rekening belum tersedia.</p>`;
-                }
-            }
-
-            // I. Galeri
-            const galleryGrid = document.getElementById('gallery-grid');
-            if (galleryGrid && galleries.length) {
-                let html = '';
-                const sorted = [...galleries].sort((a, b) => (a.sort || 0) - (b.sort || 0));
-                sorted.forEach((img, idx) => {
-                    const isVideo = idx === 3;
-                    if (isVideo) {
-                        html += `
-                            <div class="aspect-square rounded-xl lg:rounded-2xl overflow-hidden relative md:w-[calc(25%-0.75rem)] lg:w-[calc(66.6666%-1rem)] group order-4">
-                                <img src="${img.image}" alt="thumbnail" class="w-full h-full object-cover gallery-img" data-index="${idx}" />
-                                <div class="absolute inset-0 flex items-center justify-center transition duration-300 lg:group-hover:scale-110 cursor-pointer" data-index="${idx}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-color2 bg-white/80 backdrop-blur p-3 rounded-full drop-shadow-lg"><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"></path></svg>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        const orderClass = idx < 3 ? `order-${idx+1}` : `order-${idx+2}`;
-                        html += `
-                            <div class="rounded-xl lg:rounded-2xl aspect-square overflow-hidden cursor-pointer w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(33.3333%-1rem)] ${orderClass}">
-                                <img src="${img.image}" alt="Foto ${idx+1}" class="w-full h-full object-cover gallery-img" data-index="${idx}" />
-                            </div>
-                        `;
-                    }
-                });
-                galleryGrid.innerHTML = html;
-                initGalleryModal(sorted);
-            }
-
-            // J. Stories
-            const storyCarousel = document.getElementById('story-carousel');
-            if (storyCarousel && stories.length) {
-                let html = '';
-                stories.forEach(st => {
-                    html += `
-                        <div class="snap-center shrink-0 w-full px-6">
-                            <div class="bg-gradient-to-b from-white/30 to-transparent rounded-2xl p-8 lg:p-12 h-full">
-                                <p class="text-sm opacity-90 mb-1">${st.date || ''}</p>
-                                <h3 class="text-2xl font-bold mb-3">${st.title || ''}</h3>
-                                <p class="text-sm font-light whitespace-pre-line leading-relaxed">${st.content || ''}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-                storyCarousel.innerHTML = html;
-                startStoryAutoplay();
-                initCarouselProgress();
-            }
-
-            // K. Ucapan
-            const greetingList = document.getElementById('greeting-list');
-            if (greetingList) {
-                if (greetings && greetings.length > 0) {
-                    let html = '';
-                    greetings.slice(0, 10).forEach(g => {
-                        const date = g.timestamp ? new Date(g.timestamp).toLocaleDateString('id-ID') : '';
-                        html += `
-                            <div class="bg-gray-50 p-4 rounded-xl mb-3 border border-gray-200">
-                                <p class="font-semibold text-gray-800">${escapeHtml(g.name || 'Anonim')}</p>
-                                <p class="text-sm text-gray-600" style="white-space:pre-wrap;word-break:break-word;">${escapeHtml(g.message || '')}</p>
-                                <p class="text-xs text-gray-400 mt-1">${date}</p>
-                            </div>
-                        `;
-                    });
-                    greetingList.innerHTML = html;
-                } else {
-                    greetingList.innerHTML = `<div class="bg-gray-50 p-8 rounded-2xl italic text-center text-sm text-gray-400">Belum ada ucapan</div>`;
-                }
-            }
-
-            // L. Footer
-            document.getElementById('footer-title').textContent = s.title || 'Chyntia & Rian';
-            const footerParents = document.getElementById('footer-parents');
-            if (footerParents) {
-                let html = '';
-                if (brideWanita) {
-                    html += `
-                        <div class="sm:text-left">
-                            <p class="font-medium mb-1">Keluarga</p>
-                            <p>Bapak ${brideWanita.father || ''}</p>
-                            <p>Ibu ${brideWanita.mother || ''}</p>
-                        </div>
-                    `;
-                }
-                if (bridePria) {
-                    html += `
-                        <div class="sm:text-right">
-                            <p class="font-medium mb-1">Keluarga</p>
-                            <p>Bapak ${bridePria.father || ''}</p>
-                            <p>Ibu ${bridePria.mother || ''}</p>
-                        </div>
-                    `;
-                }
-                footerParents.innerHTML = html;
-            }
-
-            // M. Background Carousel
-            const bgCarousel = document.getElementById('bg-carousel');
-            if (bgCarousel && galleries.length) {
-                let html = '';
-                galleries.forEach((img, idx) => {
-                    const active = idx === 0 ? 'active' : '';
-                    html += `<img src="${img.image}" class="bg-carousel-item ${active}" alt="bg${idx+1}" />`;
-                });
-                bgCarousel.innerHTML = html;
-                startBgSlideshow();
-            }
-
-            // N. Sembunyikan bagian
-            if (s.show_akad === false) document.querySelector('.section-akad')?.remove();
-            if (s.show_resepsi === false) document.querySelector('.section-resepsi')?.remove();
-            if (s.show_ngunduh === false) document.querySelector('.section-ngunduh')?.remove();
-            if (s.show_cerita === false) document.getElementById('cerita')?.remove();
-            if (s.show_galeri === false) document.getElementById('galeri')?.remove();
-            if (s.show_ucapan === false) {
-                document.getElementById('ucapan')?.remove();
-            }
-
-            // O. Tampilkan cover
-            setTimeout(() => {
-                document.getElementById('loading-dots').style.opacity = '0';
-                setTimeout(() => document.getElementById('loading-dots').style.display = 'none', 500);
-                document.body.classList.add('loaded');
-                document.getElementById('cover-content').classList.remove('opacity-0');
-            }, 500);
-
-            // P. Scroll Reveal
-            initScrollReveal();
-
-            // Q. RSVP radio styling
-            document.querySelectorAll('.rsvp-option input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    document.querySelectorAll('.rsvp-option').forEach(opt => opt.classList.remove('selected'));
-                    if (this.checked) this.closest('.rsvp-option').classList.add('selected');
-                });
-            });
-        }
-
-        // ================================================================
-        // 3. UTILITY FUNCTIONS
-        // ================================================================
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // ================================================================
-        // 4. COUNTDOWN
-        // ================================================================
-        function startCountdown(targetDate) {
-            const daysEl = document.getElementById('cd-days');
-            const hoursEl = document.getElementById('cd-hours');
-            const minutesEl = document.getElementById('cd-minutes');
-            const secondsEl = document.getElementById('cd-seconds');
-
-            function update() {
-                const now = new Date();
-                const diff = targetDate - now;
-                if (diff <= 0) {
-                    daysEl.textContent = '0'; hoursEl.textContent = '0'; minutesEl.textContent = '0'; secondsEl.textContent = '0';
-                    return;
-                }
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                daysEl.textContent = days;
-                hoursEl.textContent = String(hours).padStart(2, '0');
-                minutesEl.textContent = String(minutes).padStart(2, '0');
-                secondsEl.textContent = String(seconds).padStart(2, '0');
-            }
-            update();
-            setInterval(update, 1000);
-        }
-
-        // ================================================================
-        // 5. BACKGROUND SLIDESHOW
-        // ================================================================
-        let bgInterval = null;
-
-        function startBgSlideshow() {
-            if (bgInterval) clearInterval(bgInterval);
-            const items = document.querySelectorAll('.bg-carousel-item');
-            if (items.length < 2) return;
-            let current = 0;
-            bgInterval = setInterval(() => {
-                items[current].classList.remove('active');
-                current = (current + 1) % items.length;
-                items[current].classList.add('active');
-            }, 5000);
-        }
-
-        // ================================================================
-        // 6. STORIES AUTOPLAY & PROGRESS
-        // ================================================================
-        let storyAutoplayInterval = null;
-        let storyCurrentIndex = 0;
-
-        function startStoryAutoplay() {
-            const carousel = document.getElementById('story-carousel');
-            if (!carousel) return;
-            const slides = carousel.querySelectorAll('.snap-center');
-            if (slides.length === 0) return;
-            if (storyAutoplayInterval) clearInterval(storyAutoplayInterval);
-            storyAutoplayInterval = setInterval(() => {
-                storyCurrentIndex = (storyCurrentIndex + 1) % slides.length;
-                const targetSlide = slides[storyCurrentIndex];
-                if (targetSlide) {
-                    carousel.scrollTo({
-                        left: targetSlide.offsetLeft,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 5000);
-        }
-
-        function initCarouselProgress() {
-            const carousel = document.getElementById('story-carousel');
-            const progress = document.getElementById('cerita-progress');
-            if (!carousel || !progress) return;
-
-            carousel.addEventListener('scroll', () => {
-                const scrollLeft = carousel.scrollLeft;
-                const scrollWidth = carousel.scrollWidth - carousel.clientWidth;
-                let pct = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
-                let width = 16.66 + (pct * 0.8334);
-                progress.style.width = Math.min(width, 100) + '%';
-            });
-
-            carousel.addEventListener('scroll', () => {
-                if (storyAutoplayInterval) {
-                    clearInterval(storyAutoplayInterval);
-                    startStoryAutoplay();
-                }
-            });
-        }
-
-        // ================================================================
-        // 7. SCROLL REVEAL
-        // ================================================================
-        function initScrollReveal() {
-            const elements = document.querySelectorAll('.reveal-elem');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('visible');
-                });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-            elements.forEach(el => observer.observe(el));
-        }
-
-        // ================================================================
-        // 8. GALLERY MODAL
-        // ================================================================
-        let galleryImages = [];
-        let currentGalleryIndex = 0;
-
-        function initGalleryModal(images) {
-            galleryImages = images;
-            const modal = document.getElementById('gallery-modal');
-            const modalImg = document.getElementById('modal-image');
-            const closeBtn = document.getElementById('modal-close');
-            const prevBtn = document.getElementById('modal-prev');
-            const nextBtn = document.getElementById('modal-next');
-
-            function openGallery(index) {
-                if (index < 0) index = galleryImages.length - 1;
-                if (index >= galleryImages.length) index = 0;
-                currentGalleryIndex = index;
-                modalImg.src = galleryImages[index].image;
-                modal.classList.add('show');
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeGallery() {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
-                document.body.style.overflow = '';
-            }
-
-            function nextImage() {
-                currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
-                modalImg.src = galleryImages[currentGalleryIndex].image;
-            }
-
-            function prevImage() {
-                currentGalleryIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
-                modalImg.src = galleryImages[currentGalleryIndex].image;
-            }
-
-            document.getElementById('gallery-grid').addEventListener('click', function(e) {
-                const img = e.target.closest('.gallery-img');
-                if (img) {
-                    const idx = parseInt(img.dataset.index);
-                    if (!isNaN(idx)) openGallery(idx);
-                }
-                const playBtn = e.target.closest('[data-index]');
-                if (playBtn && !playBtn.closest('.gallery-img')) {
-                    const idx = parseInt(playBtn.dataset.index);
-                    if (!isNaN(idx)) openGallery(idx);
-                }
-            });
-
-            closeBtn.addEventListener('click', closeGallery);
-            prevBtn.addEventListener('click', prevImage);
-            nextBtn.addEventListener('click', nextImage);
-
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) closeGallery();
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if (modal.style.display !== 'flex') return;
-                if (e.key === 'Escape') closeGallery();
-                if (e.key === 'ArrowRight') nextImage();
-                if (e.key === 'ArrowLeft') prevImage();
-            });
-        }
-
-        // ================================================================
-        // 9. COVER - BUKA UNDANGAN + SCROLL
-        // ================================================================
-        document.getElementById('btn-open').addEventListener('click', () => {
-            const cover = document.getElementById('cover-page');
-            const nav = document.getElementById('bottom-nav');
-            const audio = document.getElementById('bg-music');
-
-            cover.style.transform = 'translateY(-100%)';
-            setTimeout(() => {
-                cover.style.display = 'none';
-                document.getElementById('pembuka').scrollIntoView({ behavior: 'smooth' });
-            }, 1000);
-
-            nav.classList.remove('translate-y-24');
-            audio.play().catch(() => console.log('Audio autoplay blocked'));
+            html += `
+                <div class="reveal-elem relative overflow-hidden p-8 rounded-[2rem] glass-card-dark text-white shadow-2xl event-card-radial">
+                    <div class="relative z-10 flex flex-col gap-4 text-center">
+                        <h3 class="text-3xl lg:text-4xl font-title">${ev.title}</h3>
+                        <p class="font-bold">${dateStr}</p>
+                        <p class="opacity-70">${timeStart}${timeEnd ? ' - ' + timeEnd : ''} WIB</p>
+                        <p class="font-semibold">${ev.venue}</p>
+                        <p class="text-sm opacity-70">${ev.address}</p>
+                        ${mapLink ? `<a href="${mapLink}" target="_blank" class="text-color1 underline text-sm inline-flex items-center gap-1 justify-center mt-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Lihat Google Maps
+                        </a>` : ''}
+                    </div>
+                </div>
+            `;
         });
+        eventsContainer.innerHTML = html;
+    }
 
-        // ================================================================
-        // 10. MUSIC TOGGLE
-        // ================================================================
-        const musicToggle = document.getElementById('btn-music-toggle');
-        const iconWrapper = document.getElementById('music-icon-wrapper');
-        const tooltipText = document.getElementById('music-tooltip-text');
-        const audioEl = document.getElementById('bg-music');
+    // H. GIFTS
+    const giftsContainer = document.getElementById('gifts-container');
+    if (giftsContainer) {
+        const publishedGifts = gifts.filter(g => g.is_published !== false);
+        if (publishedGifts.length > 0) {
+            let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">';
+            publishedGifts.forEach(g => {
+                let icon = '🏦';
+                if (g.type && g.type.toLowerCase() === 'gift') icon = '🎁';
+                else if (g.type && g.type.toLowerCase() === 'bank') icon = '🏦';
+                
+                html += `
+                    <div class="glass-card-dark p-5 rounded-xl text-center border border-white/10 hover:border-color1/50 transition-colors duration-300">
+                        <div class="text-2xl mb-1">${icon}</div>
+                        <p class="text-xs opacity-60 uppercase tracking-wider">${g.type || 'Bank'}</p>
+                        <p class="font-bold text-lg mt-1 text-white">${g.bank_name || ''}</p>
+                        <p class="text-sm font-mono tracking-wider bg-white/10 py-1.5 px-3 rounded inline-block mt-2 text-white/90">${g.account_number || ''}</p>
+                        <p class="text-xs opacity-80 mt-2">a.n. ${g.account_owner || ''}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            giftsContainer.innerHTML = html;
+        } else {
+            giftsContainer.innerHTML = `<p class="text-center text-sm opacity-50">Informasi rekening belum tersedia.</p>`;
+        }
+    }
 
-        const svgOn = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path></svg>`;
-        const svgOff = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M14.42 14.45a3 3 0 1 0 4.138 4.119"></path><path d="M9 17v-8m0 -4v-1h10v11"></path><path d="M12 8h7"></path><path d="M3 3l18 18"></path></svg>`;
-
-        let isMusicPlaying = true;
-
-        musicToggle.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                audioEl.pause();
-                iconWrapper.innerHTML = svgOff;
-                tooltipText.textContent = 'Musik dihentikan';
+    // I. Galeri
+    const galleryGrid = document.getElementById('gallery-grid');
+    if (galleryGrid && galleries.length) {
+        let html = '';
+        const sorted = [...galleries].sort((a, b) => (a.sort || 0) - (b.sort || 0));
+        sorted.forEach((img, idx) => {
+            const isVideo = idx === 3;
+            if (isVideo) {
+                html += `
+                    <div class="aspect-square rounded-xl lg:rounded-2xl overflow-hidden relative md:w-[calc(25%-0.75rem)] lg:w-[calc(66.6666%-1rem)] group order-4">
+                        <img src="${img.image}" alt="thumbnail" class="w-full h-full object-cover gallery-img" data-index="${idx}" />
+                        <div class="absolute inset-0 flex items-center justify-center transition duration-300 lg:group-hover:scale-110 cursor-pointer" data-index="${idx}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-color2 bg-white/80 backdrop-blur p-3 rounded-full drop-shadow-lg"><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"></path></svg>
+                        </div>
+                    </div>
+                `;
             } else {
-                audioEl.play().catch(() => {});
-                iconWrapper.innerHTML = svgOn;
-                tooltipText.textContent = 'Musik diputar';
-            }
-            isMusicPlaying = !isMusicPlaying;
-        });
-
-        // ================================================================
-        // 11. FORM UCAPAN
-        // ================================================================
-        document.getElementById('form-greeting').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('guest-name-input').value.trim();
-            const message = document.getElementById('guest-message-input').value.trim();
-            if (!name || !message) return alert('Nama dan pesan wajib diisi');
-
-            const payload = { action: 'greeting', name, message, wedding_id: 1 };
-
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const result = await res.json();
-                if (result.success) {
-                    alert('✅ Ucapan terkirim!');
-                    this.reset();
-                    await loadData();
-                } else {
-                    alert('❌ Gagal: ' + (result.error || 'Unknown error'));
-                }
-            } catch (err) {
-                alert('❌ Gagal mengirim: ' + err.message);
+                const orderClass = idx < 3 ? `order-${idx+1}` : `order-${idx+2}`;
+                html += `
+                    <div class="rounded-xl lg:rounded-2xl aspect-square overflow-hidden cursor-pointer w-[calc(50%-0.5rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(33.3333%-1rem)] ${orderClass}">
+                        <img src="${img.image}" alt="Foto ${idx+1}" class="w-full h-full object-cover gallery-img" data-index="${idx}" />
+                    </div>
+                `;
             }
         });
+        galleryGrid.innerHTML = html;
+        initGalleryModal(sorted);
+    }
 
-        // ================================================================
-        // 12. FORM RSVP
-        // ================================================================
-        document.getElementById('form-rsvp').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('rsvp-name').value.trim();
-            const address = document.getElementById('rsvp-address').value.trim();
-            const attendance = document.querySelector('input[name="attendance"]:checked');
-            if (!name) return alert('Nama wajib diisi');
-            if (!attendance) return alert('Pilih status kehadiran');
-
-            const payload = {
-                action: 'rsvp',
-                guest_name: name,
-                guest_address: address || '-',
-                attendance: attendance.value,
-                wedding_id: 1
-            };
-
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const result = await res.json();
-                if (result.success) {
-                    alert('✅ Konfirmasi terkirim!');
-                    this.reset();
-                    document.querySelectorAll('.rsvp-option').forEach(opt => opt.classList.remove('selected'));
-                } else {
-                    alert('❌ Gagal: ' + (result.error || 'Unknown error'));
-                }
-            } catch (err) {
-                alert('❌ Gagal mengirim: ' + err.message);
-            }
+    // J. Stories
+    const storyCarousel = document.getElementById('story-carousel');
+    if (storyCarousel && stories.length) {
+        let html = '';
+        stories.forEach(st => {
+            html += `
+                <div class="snap-center shrink-0 w-full px-6">
+                    <div class="bg-gradient-to-b from-white/30 to-transparent rounded-2xl p-8 lg:p-12 h-full">
+                        <p class="text-sm opacity-90 mb-1">${st.date || ''}</p>
+                        <h3 class="text-2xl font-bold mb-3">${st.title || ''}</h3>
+                        <p class="text-sm font-light whitespace-pre-line leading-relaxed">${st.content || ''}</p>
+                    </div>
+                </div>
+            `;
         });
+        storyCarousel.innerHTML = html;
+        startStoryAutoplay();
+        initCarouselProgress();
+    }
 
-        // ================================================================
-        // 13. GUEST NAME FROM URL
-        // ================================================================
-        (function setGuestFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            const guest = params.get('to');
-            if (guest) {
-                document.getElementById('guest-name-display').textContent = guest;
-                const addr = params.get('address');
-                if (addr) document.getElementById('guest-address-display').textContent = addr;
-            }
-        })();
+    // K. Ucapan
+    const greetingList = document.getElementById('greeting-list');
+    if (greetingList) {
+        if (greetings && greetings.length > 0) {
+            let html = '';
+            greetings.slice(0, 10).forEach(g => {
+                const date = g.timestamp ? new Date(g.timestamp).toLocaleDateString('id-ID') : '';
+                html += `
+                    <div class="bg-gray-50 p-4 rounded-xl mb-3 border border-gray-200">
+                        <p class="font-semibold text-gray-800">${escapeHtml(g.name || 'Anonim')}</p>
+                        <p class="text-sm text-gray-600" style="white-space:pre-wrap;word-break:break-word;">${escapeHtml(g.message || '')}</p>
+                        <p class="text-xs text-gray-400 mt-1">${date}</p>
+                    </div>
+                `;
+            });
+            greetingList.innerHTML = html;
+        } else {
+            greetingList.innerHTML = `<div class="bg-gray-50 p-8 rounded-2xl italic text-center text-sm text-gray-400">Belum ada ucapan</div>`;
+        }
+    }
 
-        // ================================================================
-        // 14. START
-        // ================================================================
-        document.addEventListener('DOMContentLoaded', loadData);
+    // L. Footer
+    document.getElementById('footer-title').textContent = s.title || 'Chyntia & Rian';
+    const footerParents = document.getElementById('footer-parents');
+    if (footerParents) {
+        let html = '';
+        if (brideWanita) {
+            html += `
+                <div class="sm:text-left">
+                    <p class="font-medium mb-1">Keluarga</p>
+                    <p>Bapak ${brideWanita.father || ''}</p>
+                    <p>Ibu ${brideWanita.mother || ''}</p>
+                </div>
+            `;
+        }
+        if (bridePria) {
+            html += `
+                <div class="sm:text-right">
+                    <p class="font-medium mb-1">Keluarga</p>
+                    <p>Bapak ${bridePria.father || ''}</p>
+                    <p>Ibu ${bridePria.mother || ''}</p>
+                </div>
+            `;
+        }
+        footerParents.innerHTML = html;
+    }
+
+    // M. Background Carousel
+    const bgCarousel = document.getElementById('bg-carousel');
+    if (bgCarousel && galleries.length) {
+        let html = '';
+        galleries.forEach((img, idx) => {
+            const active = idx === 0 ? 'active' : '';
+            html += `<img src="${img.image}" class="bg-carousel-item ${active}" alt="bg${idx+1}" />`;
+        });
+        bgCarousel.innerHTML = html;
+        startBgSlideshow();
+    }
+
+    // N. Sembunyikan bagian
+    if (s.show_akad === false) document.querySelector('.section-akad')?.remove();
+    if (s.show_resepsi === false) document.querySelector('.section-resepsi')?.remove();
+    if (s.show_ngunduh === false) document.querySelector('.section-ngunduh')?.remove();
+    if (s.show_cerita === false) document.getElementById('cerita')?.remove();
+    if (s.show_galeri === false) document.getElementById('galeri')?.remove();
+    if (s.show_ucapan === false) {
+        document.getElementById('ucapan')?.remove();
+    }
+
+    // O. Tampilkan cover
+    setTimeout(() => {
+        document.getElementById('loading-dots').style.opacity = '0';
+        setTimeout(() => document.getElementById('loading-dots').style.display = 'none', 500);
+        document.body.classList.add('loaded');
+        document.getElementById('cover-content').classList.remove('opacity-0');
+    }, 500);
+
+    // P. Scroll Reveal
+    initScrollReveal();
+
+    // Q. RSVP radio styling
+    document.querySelectorAll('.rsvp-option input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('.rsvp-option').forEach(opt => opt.classList.remove('selected'));
+            if (this.checked) this.closest('.rsvp-option').classList.add('selected');
+        });
+    });
+}
+
+// ================================================================
+// 3. UTILITY FUNCTIONS
+// ================================================================
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ================================================================
+// 4. COUNTDOWN
+// ================================================================
+function startCountdown(targetDate) {
+    const daysEl = document.getElementById('cd-days');
+    const hoursEl = document.getElementById('cd-hours');
+    const minutesEl = document.getElementById('cd-minutes');
+    const secondsEl = document.getElementById('cd-seconds');
+
+    function update() {
+        const now = new Date();
+        const diff = targetDate - now;
+        if (diff <= 0) {
+            daysEl.textContent = '0'; hoursEl.textContent = '0'; minutesEl.textContent = '0'; secondsEl.textContent = '0';
+            return;
+        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        daysEl.textContent = days;
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minutesEl.textContent = String(minutes).padStart(2, '0');
+        secondsEl.textContent = String(seconds).padStart(2, '0');
+    }
+    update();
+    setInterval(update, 1000);
+}
+
+// ================================================================
+// 5. BACKGROUND SLIDESHOW
+// ================================================================
+let bgInterval = null;
+
+function startBgSlideshow() {
+    if (bgInterval) clearInterval(bgInterval);
+    const items = document.querySelectorAll('.bg-carousel-item');
+    if (items.length < 2) return;
+    let current = 0;
+    bgInterval = setInterval(() => {
+        items[current].classList.remove('active');
+        current = (current + 1) % items.length;
+        items[current].classList.add('active');
+    }, 5000);
+}
+
+// ================================================================
+// 6. STORIES AUTOPLAY & PROGRESS
+// ================================================================
+let storyAutoplayInterval = null;
+let storyCurrentIndex = 0;
+
+function startStoryAutoplay() {
+    const carousel = document.getElementById('story-carousel');
+    if (!carousel) return;
+    const slides = carousel.querySelectorAll('.snap-center');
+    if (slides.length === 0) return;
+    if (storyAutoplayInterval) clearInterval(storyAutoplayInterval);
+    storyAutoplayInterval = setInterval(() => {
+        storyCurrentIndex = (storyCurrentIndex + 1) % slides.length;
+        const targetSlide = slides[storyCurrentIndex];
+        if (targetSlide) {
+            carousel.scrollTo({
+                left: targetSlide.offsetLeft,
+                behavior: 'smooth'
+            });
+        }
+    }, 5000);
+}
+
+function initCarouselProgress() {
+    const carousel = document.getElementById('story-carousel');
+    const progress = document.getElementById('cerita-progress');
+    if (!carousel || !progress) return;
+
+    carousel.addEventListener('scroll', () => {
+        const scrollLeft = carousel.scrollLeft;
+        const scrollWidth = carousel.scrollWidth - carousel.clientWidth;
+        let pct = scrollWidth > 0 ? (scrollLeft / scrollWidth) * 100 : 0;
+        let width = 16.66 + (pct * 0.8334);
+        progress.style.width = Math.min(width, 100) + '%';
+    });
+
+    carousel.addEventListener('scroll', () => {
+        if (storyAutoplayInterval) {
+            clearInterval(storyAutoplayInterval);
+            startStoryAutoplay();
+        }
+    });
+}
+
+// ================================================================
+// 7. SCROLL REVEAL
+// ================================================================
+function initScrollReveal() {
+    const elements = document.querySelectorAll('.reveal-elem');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    elements.forEach(el => observer.observe(el));
+}
+
+// ================================================================
+// 8. GALLERY MODAL
+// ================================================================
+let galleryImages = [];
+let currentGalleryIndex = 0;
+
+function initGalleryModal(images) {
+    galleryImages = images;
+    const modal = document.getElementById('gallery-modal');
+    const modalImg = document.getElementById('modal-image');
+    const closeBtn = document.getElementById('modal-close');
+    const prevBtn = document.getElementById('modal-prev');
+    const nextBtn = document.getElementById('modal-next');
+
+    function openGallery(index) {
+        if (index < 0) index = galleryImages.length - 1;
+        if (index >= galleryImages.length) index = 0;
+        currentGalleryIndex = index;
+        modalImg.src = galleryImages[index].image;
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeGallery() {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function nextImage() {
+        currentGalleryIndex = (currentGalleryIndex + 1) % galleryImages.length;
+        modalImg.src = galleryImages[currentGalleryIndex].image;
+    }
+
+    function prevImage() {
+        currentGalleryIndex = (currentGalleryIndex - 1 + galleryImages.length) % galleryImages.length;
+        modalImg.src = galleryImages[currentGalleryIndex].image;
+    }
+
+    document.getElementById('gallery-grid').addEventListener('click', function(e) {
+        const img = e.target.closest('.gallery-img');
+        if (img) {
+            const idx = parseInt(img.dataset.index);
+            if (!isNaN(idx)) openGallery(idx);
+        }
+        const playBtn = e.target.closest('[data-index]');
+        if (playBtn && !playBtn.closest('.gallery-img')) {
+            const idx = parseInt(playBtn.dataset.index);
+            if (!isNaN(idx)) openGallery(idx);
+        }
+    });
+
+    closeBtn.addEventListener('click', closeGallery);
+    prevBtn.addEventListener('click', prevImage);
+    nextBtn.addEventListener('click', nextImage);
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) closeGallery();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (modal.style.display !== 'flex') return;
+        if (e.key === 'Escape') closeGallery();
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+    });
+}
+
+// ================================================================
+// 9. COVER - BUKA UNDANGAN + SCROLL
+// ================================================================
+document.getElementById('btn-open').addEventListener('click', () => {
+    const cover = document.getElementById('cover-page');
+    const nav = document.getElementById('bottom-nav');
+    const audio = document.getElementById('bg-music');
+
+    cover.style.transform = 'translateY(-100%)';
+    setTimeout(() => {
+        cover.style.display = 'none';
+        document.getElementById('pembuka').scrollIntoView({ behavior: 'smooth' });
+    }, 1000);
+
+    nav.classList.remove('translate-y-24');
+    audio.play().catch(() => console.log('Audio autoplay blocked'));
+});
+
+// ================================================================
+// 10. MUSIC TOGGLE
+// ================================================================
+const musicToggle = document.getElementById('btn-music-toggle');
+const iconWrapper = document.getElementById('music-icon-wrapper');
+const tooltipText = document.getElementById('music-tooltip-text');
+const audioEl = document.getElementById('bg-music');
+
+const svgOn = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path></svg>`;
+const svgOff = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M14.42 14.45a3 3 0 1 0 4.138 4.119"></path><path d="M9 17v-8m0 -4v-1h10v11"></path><path d="M12 8h7"></path><path d="M3 3l18 18"></path></svg>`;
+
+let isMusicPlaying = true;
+
+musicToggle.addEventListener('click', () => {
+    if (isMusicPlaying) {
+        audioEl.pause();
+        iconWrapper.innerHTML = svgOff;
+        tooltipText.textContent = 'Musik dihentikan';
+    } else {
+        audioEl.play().catch(() => {});
+        iconWrapper.innerHTML = svgOn;
+        tooltipText.textContent = 'Musik diputar';
+    }
+    isMusicPlaying = !isMusicPlaying;
+});
+
+// ================================================================
+// 11. FORM UCAPAN (PERBAIKAN CORS)
+// ================================================================
+document.getElementById('form-greeting').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('guest-name-input').value.trim();
+    const message = document.getElementById('guest-message-input').value.trim();
+    if (!name || !message) return alert('Nama dan pesan wajib diisi');
+
+    const payload = { action: 'greeting', name, message, wedding_id: 1 };
+
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'omit',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+            alert('✅ Ucapan terkirim!');
+            this.reset();
+            await loadData();
+        } else {
+            alert('❌ Gagal: ' + (result.error || 'Unknown error'));
+        }
+    } catch (err) {
+        alert('❌ Gagal mengirim: ' + err.message);
+    }
+});
+
+// ================================================================
+// 12. FORM RSVP (PERBAIKAN CORS)
+// ================================================================
+document.getElementById('form-rsvp').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('rsvp-name').value.trim();
+    const address = document.getElementById('rsvp-address').value.trim();
+    const attendance = document.querySelector('input[name="attendance"]:checked');
+    if (!name) return alert('Nama wajib diisi');
+    if (!attendance) return alert('Pilih status kehadiran');
+
+    const payload = {
+        action: 'rsvp',
+        guest_name: name,
+        guest_address: address || '-',
+        attendance: attendance.value,
+        wedding_id: 1
+    };
+
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'omit',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+            alert('✅ Konfirmasi terkirim!');
+            this.reset();
+            document.querySelectorAll('.rsvp-option').forEach(opt => opt.classList.remove('selected'));
+        } else {
+            alert('❌ Gagal: ' + (result.error || 'Unknown error'));
+        }
+    } catch (err) {
+        alert('❌ Gagal mengirim: ' + err.message);
+    }
+});
+
+// ================================================================
+// 13. GUEST NAME FROM URL
+// ================================================================
+(function setGuestFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const guest = params.get('to');
+    if (guest) {
+        document.getElementById('guest-name-display').textContent = guest;
+        const addr = params.get('address');
+        if (addr) document.getElementById('guest-address-display').textContent = addr;
+    }
+})();
+
+// ================================================================
+// 14. START
+// ================================================================
+document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
