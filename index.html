@@ -462,6 +462,7 @@
         async function loadData() {
     try {
         const res = await fetch(API_URL, {
+            method: 'GET',
             mode: 'cors',
             headers: {
                 'Accept': 'application/json'
@@ -475,9 +476,8 @@
         console.error('❌ Gagal memuat data:', err);
         document.getElementById('loading-dots').innerHTML = `
             <div class="text-white text-center p-4">
-                <p class="mb-2">⚠️ Gagal memuat data.</p>
+                <p class="mb-2">⚠️ Gagal memuat data dari server.</p>
                 <p class="text-sm opacity-70">${err.message}</p>
-                <p class="text-xs opacity-50 mt-2">Pastikan Anda menjalankan HTML di server web (bukan file://)</p>
                 <button onclick="location.reload()" class="mt-4 btn-gradient rounded-full px-6 py-2 text-sm">Refresh</button>
             </div>
         `;
