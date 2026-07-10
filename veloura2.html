@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Tema Veloura - Undangan Nikah Online</title>
+    <meta name="description" content="Mer.id adalah platform undangan nikah online dan digital gratis untuk rangkaian acara pernikahan."/>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Ovo&family=Tenor+Sans&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN for standalone HTML) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        color1: '#6D6368', /* Cokelat keabuan khas Veloura */
+                        color2: '#2A2729', /* Hitam/Charcoal khas Veloura */
+                    },
+                    fontFamily: {
+                        title: ['Ovo', 'serif'],
+                        body: ['"Tenor Sans"', 'sans-serif'],
+                        arabic: ['Amiri', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            background-color: white; 
+            color: white; 
+            overflow-x: hidden; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .animate-fade-in { animation: fadeIn 1s ease-in-out forwards; }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-spin-slow { animation: spinSlow 25s linear infinite; }
+
+        @keyframes screenEdgeGlow {
+            0% { box-shadow: inset 0 0 15px rgba(109, 99, 104, 0.1); opacity: 0.3; }
+            50% { box-shadow: inset 0 0 45px rgba(109, 99, 104, 0.4); opacity: 0.9; }
+            100% { box-shadow: inset 0 0 15px rgba(109, 99, 104, 0.1); opacity: 0.3; }
+        }
+
+        .screen-edge-glow {
+            position: absolute; inset: 0; z-index: 5; pointer-events: none;
+            animation: screenEdgeGlow 2.5s ease-in-out infinite;
+        }
+
+        /* Background Slideshow crossfade */
+        .bg-slide {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0;
+            transition: opacity 2.5s ease-in-out, transform 10s linear;
+        }
+        .bg-slide.active { opacity: 1; transform: scale(1.05); }
+
+        /* Scroll Reveal Effect */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Parallax Background */
+        .bg-fixed-layer {
+            position: fixed; inset: 0; width: 100%; height: 100vh;
+            object-fit: cover; z-index: -1; pointer-events: none;
+        }
+        @media (min-width: 1280px) {
+            .bg-fixed-layer { left: 50%; width: 50%; }
+        }
+        
+        /* Nav Menu Tooltip */
+        .nav-tooltip {
+            position: absolute; top: -36px; left: 50%; transform: translateX(-50%);
+            opacity: 0; width: 0; overflow: hidden; transition: all 0.3s ease;
+        }
+        .nav-item:hover .nav-tooltip { opacity: 1; width: max-content; }
+    </style>
+</head>
+<body class="font-body antialiased">
+
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-white transition-opacity duration-1000">
+        <div class="screen-edge-glow"></div>
+        <div class="relative z-10 flex flex-col items-center animate-pulse">
+            <h1 class="font-title text-4xl text-color1 tracking-widest uppercase">Veloura</h1>
+            <p class="font-body text-xs text-color1 tracking-[0.3em] mt-2">LOADING</p>
+        </div>
+    </div>
+
+    <!-- Music Player (Vinyl) in top left corner (for desktop) -->
+    <div id="music-container" class="fixed top-6 left-6 z-[100] text-black transition-opacity duration-1000 opacity-0 pointer-events-none xl:block hidden">
+        <div id="btn-music" class="relative flex items-center justify-center cursor-pointer rounded-full border border-white/50 w-11 h-11 bg-white/10 backdrop-blur">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute inset-0 z-10 m-auto mix-blend-difference">
+                <path d="M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M13 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path>
+            </svg>
+            <img src="https://mer.id/undangan/vinyl.svg" id="vinyl-icon" class="w-full h-full animate-[spinSlow_4s_linear_infinite]" alt="musik" style="animation-play-state: paused;"/>
+        </div>
+    </div>
+    <!-- Allow cross origin media fetch to prevent file protocol errors on local test -->
+    <audio id="bg-music" src="https://api.mer.id/api/root_media/music/music-bg-theme-30b158de-8d43-4072-8764-130469edb1b0.mp3" loop preload="auto" crossorigin="anonymous" class="hidden"></audio>
+
+    <!-- 1. COVER PAGE -->
+    <div id="cover-page" class="fixed inset-0 z-50 transition-transform duration-[1200ms] ease-in-out bg-black overflow-hidden flex flex-col">
+        <div class="absolute inset-0 z-0">
+            <img src="https://mer.id/undangan/lake/foto-1.jpg" class="w-full h-full object-cover animate-fade-in" alt="Cover Background"/>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/90 via-transparent to-black/90"></div>
+        </div>
+        
+        <div class="relative z-10 flex flex-col h-full justify-between items-center py-16 px-6 text-white text-center w-full">
+            <!-- Top Section -->
+            <div class="mt-10 flex flex-col items-center">
+                <p class="uppercase tracking-widest font-bold text-xs lg:text-base mb-2 opacity-0" style="animation: fadeInUp 1s forwards 0.5s;">Undangan Pernikahan</p>
+                <h1 class="font-title text-5xl lg:text-7xl font-normal leading-none opacity-0" style="animation: fadeInUp 1s forwards 0.7s;">Chyntia & Rian</h1>
+            </div>
+            
+            <!-- Bottom Section -->
+            <div class="flex flex-col items-center gap-6 w-full opacity-0" style="animation: fadeInUp 1s forwards 0.9s;">
+                <div class="flex flex-col items-center gap-3">
+                    <p class="text-xs lg:text-base opacity-90">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+                    <h3 class="font-title text-3xl lg:text-4xl font-thin tracking-wide">Ardiani Safitri</h3>
+                    <p class="text-xs lg:text-base opacity-90">Semarang</p>
+                </div>
+                
+                <button id="btn-open" class="group flex items-center gap-2 px-8 py-3.5 mt-2 bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white transition-all duration-500 font-body text-xs lg:text-sm tracking-[0.2em] uppercase">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:scale-110 transition-transform">
+                        <path d="M3 9l9 6l9 -6l-9 -6l-9 6"></path><path d="M21 9v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"></path><path d="M3 19l6 -6"></path><path d="M15 13l6 6"></path>
+                    </svg>
+                    Buka Undangan
+                </button>
+                
+                <p class="text-[10px] lg:text-xs opacity-70 mt-2 max-w-[280px]">
+                    *Mohon maaf jika terdapat kesalahan dalam penulisan nama & gelar
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 2. BOTTOM NAVIGATION (Centered Pill) -->
+    <section id="bottom-nav" class="fixed bottom-0 right-0 w-screen z-40 flex justify-center translate-y-24 transition-transform duration-1000 delay-500">
+        <div class="relative flex gap-2 rounded-full bg-black text-white px-4 py-1.5 mb-6 shadow-2xl">
+            <!-- Radial Gradient Background -->
+            <div class="absolute inset-0 rounded-full" style="background:radial-gradient(circle at top left, rgba(109, 99, 104, 0.4) 0%, transparent 35%), radial-gradient(circle at bottom right, rgba(109, 99, 104, 0.3) 0%, transparent 35%)"></div>
+            
+            <a href="#sampul" class="nav-item relative group z-10">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l-2 0l9 -9l9 9l-2 0"></path><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path><path d="M10 12h4v4h-4l0 -4"></path></svg>
+                </div>
+                <div class="nav-tooltip max-lg:hidden"><div class="bg-white text-black text-xs py-1 px-2 rounded-full whitespace-nowrap">Pembuka</div></div>
+            </a>
+            
+            <a href="#mempelai" class="nav-item relative group z-10">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"></path><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"></path></svg>
+                </div>
+                <div class="nav-tooltip max-lg:hidden"><div class="bg-white text-black text-xs py-1 px-2 rounded-full whitespace-nowrap">Mempelai</div></div>
+            </a>
+            
+            <a href="#acara" class="nav-item relative group z-10">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"></path><path d="M16 3l0 4"></path><path d="M8 3l0 4"></path><path d="M4 11l16 0"></path><path d="M8 15h2v2h-2l0 -2"></path></svg>
+                </div>
+                <div class="nav-tooltip max-lg:hidden"><div class="bg-white text-black text-xs py-1 px-2 rounded-full whitespace-nowrap">Acara</div></div>
+            </a>
+            
+            <a href="#galeri" class="nav-item relative group z-10">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h5"></path><path d="M14 18h4"></path><path d="M15 7h.01"></path><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"></path><path d="M3 15l5 -5c.928 -.893 2.072 -.893 3 0l5 5"></path><path d="M14 13l1 -1c.928 -.893 2.072 -.893 3 0l3 3"></path><path d="M3 15h18"></path></svg>
+                </div>
+                <div class="nav-tooltip max-lg:hidden"><div class="bg-white text-black text-xs py-1 px-2 rounded-full whitespace-nowrap">Galeri</div></div>
+            </a>
+            
+            <a href="#cerita" class="nav-item relative group z-10">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path></svg>
+                </div>
+                <div class="nav-tooltip max-lg:hidden"><div class="bg-white text-black text-xs py-1 px-2 rounded-full whitespace-nowrap">Cerita</div></div>
+            </a>
+            
+            <a href="#ucapan" class="nav-item relative group z-10">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1"></path></svg>
+                </div>
+                <div class="nav-tooltip max-lg:hidden"><div class="bg-white text-black text-xs py-1 px-2 rounded-full whitespace-nowrap">Ucapan</div></div>
+            </a>
+            
+            <button id="btn-music-toggle-bottom" class="nav-item relative group z-10 xl:hidden">
+                <div class="cursor-pointer w-10 h-10 rounded-full flex items-center justify-center transition lg:hover:scale-110" id="music-icon-wrapper-bottom">
+                    <svg id="icon-music-on-bottom" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path></svg>
+                </div>
+            </button>
+        </div>
+    </section>
+
+    <!-- MAIN SCROLLABLE CONTENT -->
+    <main id="main-content" class="relative z-10 w-full overflow-hidden opacity-0 invisible transition-opacity duration-1000">
+        
+        <!-- FIXED PARALLAX BACKGROUND -->
+        <div class="fixed inset-0 xl:left-1/2 w-full xl:w-1/2 h-full pointer-events-none z-[-2]">
+            <img class="size-full object-cover" src="https://mer.id/undangan/lake/foto-1.jpg" alt="Cover Background"/>
+        </div>
+        <div class="fixed inset-0 bg-black/50 lg:backdrop-blur z-[-1]"></div>
+        
+        <!-- 3. OPENING SLIDESHOW -->
+        <section id="sampul" class="relative w-full h-[100dvh] flex flex-col justify-end text-white overflow-hidden bg-zinc-900">
+            <div class="absolute inset-0 z-0">
+                <img src="https://mer.id/undangan/lake/foto-2.jpg" class="bg-slide active">
+                <img src="https://mer.id/undangan/lake/foto-3.jpg" class="bg-slide">
+                <img src="https://mer.id/undangan/lake/foto-4.jpg" class="bg-slide">
+                <img src="https://mer.id/undangan/lake/foto-5.jpg" class="bg-slide">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+            </div>
+            
+            <div class="relative z-10 w-full p-6 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-end gap-10 lg:gap-4 pb-16">
+                <div class="flex flex-col gap-4 max-lg:items-center">
+                    <p class="font-body text-base lg:text-lg tracking-widest">Save The Date</p>
+                </div>
+                <div class="flex flex-col lg:text-right items-end max-lg:items-center max-lg:mb-20">
+                    <p class="font-body font-bold text-sm tracking-widest mb-2">Undangan Pernikahan</p>
+                    <h1 class="font-title text-4xl md:text-5xl font-normal leading-none text-white">Chyntia & Rian</h1>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. QUOTES & INTRO (White Bg) -->
+        <section class="bg-white relative w-full py-24 px-6 lg:px-32 flex flex-col items-center justify-center text-center overflow-hidden z-20 shadow-2xl">
+            <div class="absolute -top-24 -right-24">
+                <svg xmlns="http://www.w3.org/2000/svg" width="250" height="250" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="animate-spin-slow blur-[2px] text-color1 opacity-20"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M12 2a3 3 0 0 1 3 3c0 .562 -.259 1.442 -.776 2.64l-.724 1.36l1.76 -1.893c.499 -.6 .922 -1 1.27 -1.205a2.968 2.968 0 0 1 4.07 1.099a3.011 3.011 0 0 1 -1.09 4.098c-.374 .217 -.99 .396 -1.846 .535l-2.664 .366l2.4 .326c1 .145 1.698 .337 2.11 .576a3.011 3.011 0 0 1 1.09 4.098a2.968 2.968 0 0 1 -4.07 1.098c-.348 -.202 -.771 -.604 -1.27 -1.205l-1.76 -1.893l.724 1.36c.516 1.199 .776 2.079 .776 2.64a3 3 0 0 1 -6 0c0 -.562 .259 -1.442 .776 -2.64l.724 -1.36l-1.76 1.893c-.499 .601 -.922 1 -1.27 1.205a2.968 2.968 0 0 1 -4.07 -1.098a3.011 3.011 0 0 1 1.09 -4.098c.374 -.218 .99 -.396 1.846 -.536l2.664 -.366l-2.4 -.325c-1 -.145 -1.698 -.337 -2.11 -.576a3.011 3.011 0 0 1 -1.09 -4.099a2.968 2.968 0 0 1 4.07 -1.099c.348 .203 .771 .604 1.27 1.205l1.76 1.894c-1 -2.292 -1.5 -3.625 -1.5 -4a3 3 0 0 1 3 -3"></path></svg>
+            </div>
+            <div class="text-color1 relative z-10 flex flex-col items-center mb-16 reveal">
+                <div class="border border-color1 p-3 px-8 mb-6">
+                    <p class="font-title text-4xl lg:text-5xl tracking-[0.2em] uppercase">C - R</p>
+                </div>
+                <h1 class="font-title text-4xl lg:text-5xl">Chyntia & Rian</h1>
+            </div>
+            <div class="reveal">
+                <p class="font-arabic text-xl lg:text-2xl text-color1 leading-[2.5] max-w-2xl mb-4" dir="auto">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِقَوْمٍ يَتَفَكَّرُونَ</p>
+                <p class="text-color1 font-body text-sm max-w-2xl leading-relaxed mb-6 italic">"Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."</p>
+            </div>
+        </section>
+
+        <!-- 5. MEMPELAI (Transparent / Glassmorphism) -->
+        <section id="mempelai" class="relative w-full py-24 px-4 sm:px-12 lg:px-24 flex flex-col justify-center">
+            <div class="relative z-10 w-full flex flex-col items-center">
+                <h1 class="font-title text-4xl lg:text-5xl text-white mb-16 text-center drop-shadow-md reveal">Kedua Mempelai</h1>
+                <div class="flex flex-col md:flex-row justify-center gap-10 w-full max-w-4xl mx-auto">
+                    <!-- Bride -->
+                    <div class="flex flex-col flex-1 w-full reveal">
+                        <div class="group relative overflow-hidden rounded-t-[2.5rem] border border-white/50 shadow-2xl flex-1 flex flex-col backdrop-blur-md">
+                            <div class="aspect-square w-full overflow-hidden bg-white/10">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://mer.id/undangan/lake/foto-6.jpg" alt="Pramarta Chyntia Andita"/>
+                            </div>
+                            <div class="px-6 py-6 bg-black/30 lg:bg-white/10 text-white text-center flex-1 flex flex-col justify-center">
+                                <p class="font-title text-xl lg:text-2xl leading-none tracking-wide">Pramarta Chyntia Andita</p>
+                                <p class="font-body text-[13px] opacity-90 mt-3">Anak dari Bp Nyoman Bayu & Ibu Emmy K. Saelan</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center py-4 reveal">
+                        <h1 class="font-title text-5xl lg:text-6xl drop-shadow-md text-white">&</h1>
+                    </div>
+                    <!-- Groom -->
+                    <div class="flex flex-col flex-1 w-full reveal">
+                        <div class="group relative overflow-hidden rounded-t-[2.5rem] border border-white/50 shadow-2xl flex-1 flex flex-col backdrop-blur-md">
+                            <div class="aspect-square w-full overflow-hidden bg-white/10">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://mer.id/undangan/lake/foto-7.jpg" alt="Rian Nugraha"/>
+                            </div>
+                            <div class="px-6 py-6 bg-black/30 lg:bg-white/10 text-white text-center flex-1 flex flex-col justify-center">
+                                <p class="font-title text-xl lg:text-2xl leading-none tracking-wide">Rian Nugraha</p>
+                                <p class="font-body text-[13px] opacity-90 mt-3">Anak dari Bp Indra Bayu Sinaga & Ibu Wulan Sidji</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. ACARA (Resepsi, Akad, Ngunduh Mantu & Stream) -->
+        <section id="acara" class="relative w-full py-16 px-4 sm:px-12 lg:px-24 flex flex-col justify-center">
+            <div class="relative z-10 w-full max-w-4xl mx-auto flex flex-col gap-10">
+                
+                <!-- Resepsi Card -->
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                    <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col gap-8">
+                        <div class="absolute -top-8 -left-8 lg:-top-12 lg:-left-12 bg-white text-black text-[10px] lg:text-xs py-3 px-6 lg:py-4 lg:px-8 rounded-br-2xl shadow-xl z-20 font-bold tracking-widest uppercase">
+                            Anda diundang disini
+                        </div>
+                        
+                        <div class="flex justify-between items-start mt-6 lg:mt-8">
+                            <h1 class="font-title text-3xl lg:text-5xl font-normal">Resepsi Pernikahan</h1>
+                            <div class="flex items-center gap-4 shrink-0">
+                                <a target="_blank" href="https://maps.app.goo.gl/mGJoBSq3mBPXPeANA" class="hover:opacity-80 transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-map-pin size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"></path></svg>
+                                </a>
+                                <div class="xl:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-share size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M8.7 10.7l6.6 -3.4"></path><path d="M8.7 13.3l6.6 3.4"></path></svg>
+                                </div>
+                                <div class="hidden lg:block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-qrcode size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M7 17l0 .01"></path><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M7 7l0 .01"></path><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M17 7l0 .01"></path><path d="M14 14l3 0"></path><path d="M20 14l0 .01"></path><path d="M14 14l0 3"></path><path d="M14 20l3 0"></path><path d="M17 17l3 0"></path><path d="M20 17l0 3"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-4">
+                            <p class="font-bold lg:text-lg">Patra Semarang Hotel & Convention</p>
+                            <p class="text-sm opacity-90 leading-relaxed max-w-md">Jl. Ungaran Raya, Wonotingal, Candisari, Semarang</p>
+                            
+                            <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-2">
+                                <div class="flex items-center gap-3 text-sm opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"></path><path d="M16 3l0 4"></path><path d="M8 3l0 4"></path><path d="M4 11l16 0"></path><path d="M8 15h2v2h-2l0 -2"></path></svg>
+                                    <p>Senin, 10 Agustus 2026</p>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 7v5l3 3"></path></svg>
+                                    <p>10:00 - 11:00 WIB</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RSVP Button -->
+                        <button class="mt-4 w-full md:w-auto px-6 py-4 bg-transparent border border-white text-white hover:bg-white/20 transition-colors uppercase tracking-[0.2em] text-xs font-bold flex items-center justify-center gap-3">
+                            Konfirmasi Kehadiran
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Akad Nikah -->
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                    <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col gap-6">
+                        <div class="flex justify-between items-start">
+                            <h1 class="font-title text-3xl lg:text-4xl">Akad Nikah</h1>
+                            <div class="flex items-center gap-4 shrink-0">
+                                <a target="_blank" href="https://maps.app.goo.gl/mGJoBSq3mBPXPeANA" class="hover:opacity-80 transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-map-pin size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"></path></svg>
+                                </a>
+                                <div class="xl:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-share size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M8.7 10.7l6.6 -3.4"></path><path d="M8.7 13.3l6.6 3.4"></path></svg>
+                                </div>
+                                <div class="hidden lg:block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-qrcode size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M7 17l0 .01"></path><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M7 7l0 .01"></path><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M17 7l0 .01"></path><path d="M14 14l3 0"></path><path d="M20 14l0 .01"></path><path d="M14 14l0 3"></path><path d="M14 20l3 0"></path><path d="M17 17l3 0"></path><path d="M20 17l0 3"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3">
+                            <p class="font-bold lg:text-lg">Patra Semarang Hotel & Convention</p>
+                            <p class="text-sm opacity-90 max-w-md">Jl. Ungaran Raya, Wonotingal, Candisari, Semarang</p>
+                            <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-2">
+                                <div class="flex items-center gap-3 text-sm opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"></path><path d="M16 3l0 4"></path><path d="M8 3l0 4"></path><path d="M4 11l16 0"></path><path d="M8 15h2v2h-2l0 -2"></path></svg>
+                                    <p>Senin, 10 Agustus 2026</p>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 7v5l3 3"></path></svg>
+                                    <p>08:00 - 09:00 WIB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ngunduh Mantu -->
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                    <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col gap-6">
+                        <div class="flex justify-between items-start">
+                            <h1 class="font-title text-3xl lg:text-4xl">Ngunduh Mantu</h1>
+                            <div class="flex items-center gap-4 shrink-0">
+                                <a target="_blank" href="https://maps.app.goo.gl/qAtwYMVLCvosFT3q7" class="hover:opacity-80 transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-map-pin size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"></path></svg>
+                                </a>
+                                <div class="xl:hidden">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-share size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M3 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M15 6a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M15 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M8.7 10.7l6.6 -3.4"></path><path d="M8.7 13.3l6.6 3.4"></path></svg>
+                                </div>
+                                <div class="hidden lg:block">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-qrcode size-6 lg:size-8 opacity-80 cursor-pointer hover:opacity-100 transition-opacity"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M7 17l0 .01"></path><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M7 7l0 .01"></path><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"></path><path d="M17 7l0 .01"></path><path d="M14 14l3 0"></path><path d="M20 14l0 .01"></path><path d="M14 14l0 3"></path><path d="M14 20l3 0"></path><path d="M17 17l3 0"></path><path d="M20 17l0 3"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3">
+                            <p class="font-bold lg:text-lg">Morazen Surabaya</p>
+                            <p class="text-sm opacity-90 max-w-md">Jl. Kayoon No. 4-10, Embong Kaliasin, Genteng, Surabaya</p>
+                            <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-2">
+                                <div class="flex items-center gap-3 text-sm opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"></path><path d="M16 3l0 4"></path><path d="M8 3l0 4"></path><path d="M4 11l16 0"></path><path d="M8 15h2v2h-2l0 -2"></path></svg>
+                                    <p>Kamis, 10 September 2026</p>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm opacity-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 7v5l3 3"></path></svg>
+                                    <p>13:00 - 15:00 WIB</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Streaming -->
+                <div class="relative overflow-hidden p-8 lg:p-12 bg-white/10 border border-white/20 shadow-2xl text-white backdrop-blur-md reveal">
+                    <div class="absolute inset-0 bg-gradient-to-br from-black/40 lg:from-white/10 via-transparent to-black/40 pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col gap-6">
+                        <div class="flex flex-col gap-2">
+                            <h1 class="font-title text-3xl lg:text-4xl">Live Streaming</h1>
+                            <p class="text-sm opacity-90">Cerita kami melalui footage</p>
+                        </div>
+                        <div class="flex flex-wrap gap-4 mt-4">
+                            <!-- Youtube -->
+                            <a href="https://youtube.com/" target="_blank" class="flex items-center gap-3 px-6 h-14 border border-white/50 hover:bg-white/20 transition rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-brand-youtube"><path d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z"></path><path d="M10 9l5 3l-5 3z"></path></svg>
+                                <span class="font-medium text-sm tracking-widest">YouTube</span>
+                            </a>
+                            <!-- Google Meet -->
+                            <a href="https://meet.google.com/tez-pcrz-hzz" target="_blank" class="flex items-center gap-3 px-6 h-14 border border-white/50 hover:bg-white/20 transition rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-video"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4h-10a2 2 0 0 1 -2 -2v-8a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v4z"></path></svg>
+                                <span class="font-medium text-sm tracking-widest">Google Meet</span>
+                            </a>
+                            <!-- Zoom -->
+                            <a href="https://us05web.zoom.us/j/89276608167" target="_blank" class="flex items-center gap-3 px-6 h-14 border border-white/50 hover:bg-white/20 transition rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-brand-zoom"><path d="M17.011 9.385v5.128l3.989 3.487v-12z"></path><path d="M3.887 6h10.08c1.042 0 1.887 .85 1.887 1.9v8.2c0 1.05 -.845 1.9 -1.887 1.9h-10.08c-1.042 0 -1.887 -.85 -1.887 -1.9v-8.2c0 -1.05 .845 -1.9 1.887 -1.9z"></path></svg>
+                                <span class="font-medium text-sm tracking-widest">Zoom</span>
+                            </a>
+                            <!-- TikTok -->
+                            <a href="https://tiktok.com/" target="_blank" class="flex items-center gap-3 px-6 h-14 border border-white/50 hover:bg-white/20 transition rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-brand-tiktok"><path d="M21 7.917v4.034a9.948 9.948 0 0 1 -5 -1.951v4.5a6.5 6.5 0 1 1 -8 -5.636v3.35a2.5 2.5 0 1 0 4 2.186v-14.4h3.5a5.503 5.503 0 0 0 5.5 5.5z"></path></svg>
+                                <span class="font-medium text-sm tracking-widest">TikTok</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. GALERI (Masonry style with video thumbnail) -->
+        <section id="galeri" class="relative py-20 px-6">
+            <div class="max-w-4xl mx-auto reveal">
+                <h2 class="text-4xl lg:text-5xl font-title text-center mb-10 text-white">Galeri Bahagia</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="aspect-square rounded-2xl overflow-hidden"><img src="https://mer.id/undangan/lake/foto-2.jpg" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer"></div>
+                    <div class="aspect-square rounded-2xl overflow-hidden"><img src="https://mer.id/undangan/lake/foto-3.jpg" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer"></div>
+                    <div class="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group">
+                        <!-- Video Thumbnail -->
+                        <img src="https://mer.id/undangan/lake/foto-4.jpg" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 cursor-pointer">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="bg-white/80 backdrop-blur p-4 rounded-full text-black shadow-xl cursor-pointer hover:scale-110 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="tabler-icon tabler-icon-player-play-filled"><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aspect-square rounded-2xl overflow-hidden"><img src="https://mer.id/undangan/lake/foto-5.jpg" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 cursor-pointer"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. LOVE STORY (White background over fixed parallax) -->
+        <section id="cerita" class="relative w-full py-24 bg-white z-20">
+            <div class="absolute inset-0 bg-gradient-to-t from-color1/10 to-white pointer-events-none"></div>
+            
+            <!-- Deco flowers -->
+            <div class="absolute -top-30 -left-30 opacity-10 pointer-events-none z-20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 24 24" fill="none" stroke="var(--color1)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="animate-spin-slow blur-[2px] text-color1"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M12 2a3 3 0 0 1 3 3c0 .562 -.259 1.442 -.776 2.64l-.724 1.36l1.76 -1.893c.499 -.6 .922 -1 1.27 -1.205a2.968 2.968 0 0 1 4.07 1.099a3.011 3.011 0 0 1 -1.09 4.098c-.374 .217 -.99 .396 -1.846 .535l-2.664 .366l2.4 .326c1 .145 1.698 .337 2.11 .576a3.011 3.011 0 0 1 1.09 4.098a2.968 2.968 0 0 1 -4.07 1.098c-.348 -.202 -.771 -.604 -1.27 -1.205l-1.76 -1.893l.724 1.36c.516 1.199 .776 2.079 .776 2.64a3 3 0 0 1 -6 0c0 -.562 .259 -1.442 .776 -2.64l.724 -1.36l-1.76 1.893c-.499 .601 -.922 1 -1.27 1.205a2.968 2.968 0 0 1 -4.07 -1.098a3.011 3.011 0 0 1 1.09 -4.098c.374 -.218 .99 -.396 1.846 -.536l2.664 -.366l-2.4 -.325c-1 -.145 -1.698 -.337 -2.11 -.576a3.011 3.011 0 0 1 -1.09 -4.099a2.968 2.968 0 0 1 4.07 -1.099c.348 .203 .771 .604 1.27 1.205l1.76 1.894c-1 -2.292 -1.5 -3.625 -1.5 -4a3 3 0 0 1 3 -3"></path></svg>
+            </div>
+
+            <div class="relative z-10 w-full max-w-4xl mx-auto px-6 lg:px-12 flex flex-col items-center">
+                <h1 class="text-color1 font-title text-4xl lg:text-5xl text-center mb-8 reveal">Our Love Story</h1>
+                <div class="relative z-10 flex items-center gap-4 w-40 opacity-40 mb-16 text-color1 reveal">
+                    <div class="h-px bg-color1 flex-1"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a10 10 0 1 0 20 0"></path><path d="M12 19a10 10 0 0 1 10 -10"></path><path d="M2 9a10 10 0 0 1 10 10"></path><path d="M12 4a9.7 9.7 0 0 1 2.99 7.5"></path><path d="M9.01 11.5a9.7 9.7 0 0 1 2.99 -7.5"></path></svg>
+                    <div class="h-px bg-color1 flex-1"></div>
+                </div>
+
+                <div class="flex flex-col gap-16 w-full text-center">
+                    <!-- Story 1 -->
+                    <div class="flex flex-col items-center gap-3 reveal">
+                        <p class="text-color1 font-body text-xs uppercase tracking-widest opacity-60">12 Januari 2022</p>
+                        <h1 class="text-color1 font-title text-2xl uppercase">Awal Perkenalan</h1>
+                        <p class="text-color1 font-body text-sm opacity-80 leading-relaxed max-w-xl">Semua bermula dari sebuah perkenalan sederhana. Obrolan singkat yang awalnya terasa biasa, perlahan berubah menjadi percakapan yang dinanti. Tanpa disadari, hari-hari mulai terasa lebih hangat sejak saat itu.</p>
+                    </div>
+                    <!-- Story 2 -->
+                    <div class="flex flex-col items-center gap-3 reveal">
+                        <p class="text-color1 font-body text-xs uppercase tracking-widest opacity-60">Januari 2022</p>
+                        <h1 class="text-color1 font-title text-2xl uppercase">Semakin Dekat</h1>
+                        <p class="text-color1 font-body text-sm opacity-80 leading-relaxed max-w-xl">Komunikasi yang awalnya sesekali, berubah menjadi rutinitas. Berbagi cerita tentang keseharian, mimpi, dan hal-hal kecil yang ternyata berarti. Dari sana, rasa nyaman mulai tumbuh dengan sendirinya.</p>
+                    </div>
+                    <!-- Story 3 -->
+                    <div class="flex flex-col items-center gap-3 reveal">
+                        <p class="text-color1 font-body text-xs uppercase tracking-widest opacity-60">5 Februari 2022</p>
+                        <h1 class="text-color1 font-title text-2xl uppercase">Pertemuan Pertama</h1>
+                        <p class="text-color1 font-body text-sm opacity-80 leading-relaxed max-w-xl">Pertemuan pertama menjadi momen yang tak terlupakan. Bukan tentang tempat mewah atau acara istimewa, melainkan tentang tawa, obrolan ringan, dan perasaan yang sulit dijelaskan. Hari itu, keduanya pulang dengan senyum.</p>
+                    </div>
+                    <!-- Story 4 -->
+                    <div class="flex flex-col items-center gap-3 reveal">
+                        <p class="text-color1 font-body text-xs uppercase tracking-widest opacity-60">12 Maret 2023</p>
+                        <h1 class="text-color1 font-title text-2xl uppercase">Menjalin Komitmen</h1>
+                        <p class="text-color1 font-body text-sm opacity-80 leading-relaxed max-w-xl">Seiring berjalannya waktu, perasaan itu semakin jelas. Ada keberanian untuk menyampaikan isi hati dan kesiapan untuk berjalan bersama. Hari itu menjadi awal dari sebuah komitmen yang dijaga dengan penuh kesungguhan.</p>
+                    </div>
+                    <!-- Story 5 -->
+                    <div class="flex flex-col items-center gap-3 reveal">
+                        <p class="text-color1 font-body text-xs uppercase tracking-widest opacity-60">2024 - 2025</p>
+                        <h1 class="text-color1 font-title text-2xl uppercase">Belajar & Bertumbuh Bersama</h1>
+                        <p class="text-color1 font-body text-sm opacity-80 leading-relaxed max-w-xl">Perjalanan tidak selalu mulus. Ada perbedaan, ada perdebatan, dan ada proses saling memahami. Namun dari setiap langkah, keduanya belajar untuk tumbuh dan menguatkan satu sama lain.</p>
+                    </div>
+                    <!-- Story 6 -->
+                    <div class="flex flex-col items-center gap-3 reveal">
+                        <p class="text-color1 font-body text-xs uppercase tracking-widest opacity-60">2026</p>
+                        <h1 class="text-color1 font-title text-2xl uppercase">Menuju Hari Bahagia</h1>
+                        <p class="text-color1 font-body text-sm opacity-80 leading-relaxed max-w-xl">Dengan doa keluarga dan restu orang-orang tercinta, perjalanan panjang itu akhirnya bermuara pada satu tujuan. Hari bahagia yang menjadi awal dari ibadah dan kehidupan bersama selamanya.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. KIRIM HADIAH (Dark color-2 background) -->
+        <section id="bingkisan" class="relative w-full py-24 bg-color2 text-white z-20 overflow-hidden">
+            <!-- Deco flowers -->
+            <div class="absolute top-0 -right-20 -translate-y-1/2 translate-x-1/4 opacity-10 pointer-events-none z-20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="animate-spin-slow blur-[2px]"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M12 2a3 3 0 0 1 3 3c0 .562 -.259 1.442 -.776 2.64l-.724 1.36l1.76 -1.893c.499 -.6 .922 -1 1.27 -1.205a2.968 2.968 0 0 1 4.07 1.099a3.011 3.011 0 0 1 -1.09 4.098c-.374 .217 -.99 .396 -1.846 .535l-2.664 .366l2.4 .326c1 .145 1.698 .337 2.11 .576a3.011 3.011 0 0 1 1.09 4.098a2.968 2.968 0 0 1 -4.07 1.098c-.348 -.202 -.771 -.604 -1.27 -1.205l-1.76 -1.893l.724 1.36c.516 1.199 .776 2.079 .776 2.64a3 3 0 0 1 -6 0c0 -.562 .259 -1.442 .776 -2.64l.724 -1.36l-1.76 1.893c-.499 .601 -.922 1 -1.27 1.205a2.968 2.968 0 0 1 -4.07 -1.098a3.011 3.011 0 0 1 1.09 -4.098c.374 -.218 .99 -.396 1.846 -.536l2.664 -.366l-2.4 -.325c-1 -.145 -1.698 -.337 -2.11 -.576a3.011 3.011 0 0 1 -1.09 -4.099a2.968 2.968 0 0 1 4.07 -1.099c.348 .203 .771 .604 1.27 1.205l1.76 1.894c-1 -2.292 -1.5 -3.625 -1.5 -4a3 3 0 0 1 3 -3"></path></svg>
+            </div>
+            
+            <div class="relative z-10 w-full max-w-3xl mx-auto px-6 lg:px-12 reveal">
+                <h1 class="font-title text-4xl lg:text-5xl text-center mb-6">Kirim Hadiah</h1>
+                <p class="text-sm opacity-80 leading-relaxed text-center max-w-xl mx-auto mb-6">Do'a restu Anda merupakan karunia yang sangat berarti bagi kami, terima kasih untuk yang berkenan memberikan tanda kasih</p>
+                
+                <div class="relative mx-auto flex items-center justify-center gap-4 w-40 opacity-40 mb-16 text-white">
+                    <div class="h-px bg-white flex-1"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a10 10 0 1 0 20 0"></path><path d="M12 19a10 10 0 0 1 10 -10"></path><path d="M2 9a10 10 0 0 1 10 10"></path><path d="M12 4a9.7 9.7 0 0 1 2.99 7.5"></path><path d="M9.01 11.5a9.7 9.7 0 0 1 2.99 -7.5"></path></svg>
+                    <div class="h-px bg-white flex-1"></div>
+                </div>
+
+                <h2 class="font-title text-2xl lg:text-3xl text-center mb-8">Transfer Rekening</h2>
+                
+                <!-- Rekening 1 -->
+                <div class="bg-black/20 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4 rounded-lg">
+                    <div class="flex-1">
+                        <p class="font-title font-bold text-sm md:text-base tracking-wide">Bank Central Asia (BCA)</p>
+                        <p class="text-sm opacity-90">An. Pramarta Chyntia Andita</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <p class="font-title text-xl md:text-2xl tracking-[0.1em]">98122XXXX</p>
+                        <button class="hover:opacity-60 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button>
+                    </div>
+                </div>
+
+                <!-- Rekening 2 -->
+                <div class="bg-black/20 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4 rounded-lg">
+                    <div class="flex-1">
+                        <p class="font-title font-bold text-sm md:text-base tracking-wide">Bank Mandiri</p>
+                        <p class="text-sm opacity-90">An. Rian Nugraha</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <p class="font-title text-xl md:text-2xl tracking-[0.1em]">75021XXXXX</p>
+                        <button class="hover:opacity-60 transition"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button>
+                    </div>
+                </div>
+
+                <!-- Konfirmasi Transfer Button -->
+                <button class="w-full h-12 border border-white/50 hover:bg-white/10 transition-colors text-white font-medium mb-12">
+                    Konfirmasi Transfer
+                </button>
+
+                <h2 class="font-title text-2xl lg:text-3xl text-center mb-8">Kirim Kado</h2>
+                <div class="bg-black/20 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-lg">
+                    <div class="flex-1">
+                        <p class="font-bold text-sm md:text-base tracking-wide">Penerima : Pramarta Chyntia Andita</p>
+                        <p class="text-sm md:text-base mt-2 opacity-90 max-w-md">Jl. Jenderal Sudirman No. 3A Blok 4, Krapyak, Tembalang, Semarang</p>
+                    </div>
+                    <button class="hover:opacity-60 transition mt-2 md:mt-0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"></path><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"></path></svg></button>
+                </div>
+                
+                <!-- Konfirmasi Kirim Kado Button -->
+                <button class="w-full h-12 border border-white/50 hover:bg-white/10 transition-colors text-white font-medium mt-4">
+                    Konfirmasi Kirim Kado
+                </button>
+            </div>
+        </section>
+
+        <!-- 10. DO'A & UCAPAN -->
+        <section id="ucapan" class="bg-white relative w-full py-24 z-20 bg-gradient-to-t from-color1/10 to-white overflow-hidden">
+            <div class="relative z-10 w-full max-w-2xl mx-auto px-6 lg:px-12 reveal">
+                <h1 class="text-color1 font-title text-4xl lg:text-5xl text-center mb-6">Do'a & Ucapan</h1>
+                <p class="text-color1 opacity-80 text-sm text-center mb-6">Atas do'a & ucapan bapak/ibu/saudara/i, Kami mengucapkan terima kasih.</p>
+                
+                <div class="relative mx-auto flex items-center justify-center gap-4 w-40 opacity-30 mb-12 text-color1">
+                    <div class="h-px bg-color1 flex-1"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a10 10 0 1 0 20 0"></path><path d="M12 19a10 10 0 0 1 10 -10"></path><path d="M2 9a10 10 0 0 1 10 10"></path><path d="M12 4a9.7 9.7 0 0 1 2.99 7.5"></path><path d="M9.01 11.5a9.7 9.7 0 0 1 2.99 -7.5"></path></svg>
+                    <div class="h-px bg-color1 flex-1"></div>
+                </div>
+
+                <form class="w-full flex flex-col gap-4">
+                    <textarea rows="4" placeholder="Tulis ucapan untuk kedua mempelai" class="border border-color1/30 focus:border-color1 bg-white text-color1 p-4 w-full outline-none transition rounded-none shadow-sm font-body text-sm resize-none"></textarea>
+                    <button type="button" class="w-full h-14 bg-color1 hover:bg-color1/90 text-white font-bold tracking-widest uppercase transition rounded-none text-sm">Kirim</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 11. CLOSING SECTION -->
+        <section class="relative w-full h-[80vh] md:h-[100dvh] overflow-hidden flex items-center justify-center">
+            <div class="absolute inset-0 z-0">
+                <img src="https://mer.id/undangan/lake/foto-2.jpg" class="w-full h-full object-cover" alt="Closing Background">
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+            
+            <div class="relative z-10 w-full mt-auto mx-auto p-12 text-center text-white flex flex-col justify-end h-full reveal">
+                <p class="max-w-2xl mx-auto text-sm md:text-base leading-relaxed opacity-90 mb-12">Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i, berkenan hadir dan memberikan do'a restu kepada kami.</p>
+                
+                <div class="relative mx-auto flex items-center gap-4 w-40 opacity-40 mb-8">
+                    <div class="h-px bg-white flex-1"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a10 10 0 1 0 20 0"></path><path d="M12 19a10 10 0 0 1 10 -10"></path><path d="M2 9a10 10 0 0 1 10 10"></path><path d="M12 4a9.7 9.7 0 0 1 2.99 7.5"></path><path d="M9.01 11.5a9.7 9.7 0 0 1 2.99 -7.5"></path></svg>
+                    <div class="h-px bg-white flex-1"></div>
+                </div>
+
+                <p class="text-sm opacity-80 mb-2">Kami Yang Berbahagia</p>
+                <h1 class="font-title text-4xl lg:text-5xl uppercase tracking-widest mb-4">Chyntia & Rian</h1>
+                
+                <div class="flex items-center justify-center gap-4 mt-16 pb-8">
+                    <p class="uppercase text-[10px] tracking-widest opacity-40">Invitation By</p>
+                    <a href="https://mer.id" class="font-title text-xl font-bold tracking-widest hover:opacity-70 transition">Mer.id</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            /* 1. Loader Logic */
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 1000);
+            }, 1500);
+
+            /* 2. Cover & Music Initialization */
+            const btnOpen = document.getElementById('btn-open');
+            const coverPage = document.getElementById('cover-page');
+            const mainContent = document.getElementById('main-content');
+            const bottomNav = document.getElementById('bottom-nav');
+            const audio = document.getElementById('bg-music');
+            const musicContainer = document.getElementById('music-container');
+            const vinylIcon = document.getElementById('vinyl-icon');
+            
+            // Buttons for music
+            const btnMusic = document.getElementById('btn-music');
+            const btnMusicToggleBottom = document.getElementById('btn-music-toggle-bottom');
+            
+            // SVG Icons for bottom mobile nav
+            const iconWrapperBottom = document.getElementById('music-icon-wrapper-bottom');
+            const svgMusicOn = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M9 17v-13h10v13"></path><path d="M9 8h10"></path></svg>`;
+            const svgMusicOff = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M14.42 14.45a3 3 0 1 0 4.138 4.119"></path><path d="M9 17v-8m0 -4v-1h10v11"></path><path d="M12 8h7"></path><path d="M3 3l18 18"></path></svg>`;
+
+            let isMusicPlaying = false;
+
+            function toggleMusicState() {
+                if(isMusicPlaying) {
+                    audio.pause();
+                    vinylIcon.style.animationPlayState = 'paused';
+                    if(iconWrapperBottom) iconWrapperBottom.innerHTML = svgMusicOff;
+                } else {
+                    audio.play();
+                    vinylIcon.style.animationPlayState = 'running';
+                    if(iconWrapperBottom) iconWrapperBottom.innerHTML = svgMusicOn;
+                }
+                isMusicPlaying = !isMusicPlaying;
+            }
+
+            btnOpen.addEventListener('click', () => {
+                // Slide up the cover
+                coverPage.style.transform = 'translateY(-100%)';
+                
+                // Show main content immediately
+                mainContent.classList.remove('invisible');
+                mainContent.style.opacity = '1';
+                
+                // Allow scrolling
+                document.body.style.overflowY = 'auto';
+
+                // Show bottom nav
+                bottomNav.classList.remove('translate-y-24');
+                
+                // Setup Music Player
+                musicContainer.classList.remove('opacity-0', 'pointer-events-none');
+                
+                // Play Music
+                toggleMusicState();
+                
+                // Destroy cover element after transition finishes
+                setTimeout(() => coverPage.remove(), 1200);
+            });
+
+            /* 3. Music Event Listeners */
+            btnMusic.addEventListener('click', toggleMusicState);
+            btnMusicToggleBottom.addEventListener('click', toggleMusicState);
+
+            /* 4. Background Slideshow Crossfade */
+            const bgSlides = document.querySelectorAll('.bg-slide');
+            let currentSlide = 0;
+            setInterval(() => {
+                bgSlides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % bgSlides.length;
+                bgSlides[currentSlide].classList.add('active');
+            }, 5000);
+
+            /* 5. Scroll Reveal Intersection Observer */
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { 
+                threshold: 0.1, 
+                rootMargin: "0px 0px -50px 0px" 
+            });
+
+            revealElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
