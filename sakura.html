@@ -35,35 +35,19 @@
     </script>
 
     <style>
-        /* FIX #1: Mobile scroll — body boleh overflow, panel kiri fixed di desktop */
-        body {
-            background-color: #fff;
-            color: #000;
-        }
-
-        /* Custom Scrollbar for right panel only */
+        body { background-color: #fff; color: #000; }
         .scroll-panel::-webkit-scrollbar { width: 6px; }
         .scroll-panel::-webkit-scrollbar-track { background: #CD2C48; }
         .scroll-panel::-webkit-scrollbar-thumb { background: #FA9ABC; border-radius: 10px; }
 
-        /* Sakura Animations */
         .sakurafall .sakura-petal {
-            position: absolute;
-            top: -10%;
-            z-index: 50;
-            pointer-events: none;
-            animation-name: sakura-fall;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            will-change: transform, opacity;
+            position: absolute; top: -10%; z-index: 50; pointer-events: none;
+            animation-name: sakura-fall; animation-timing-function: linear;
+            animation-iteration-count: infinite; will-change: transform, opacity;
         }
-        .sakura-sway {
-            animation: sakura-sway 15s ease-in-out infinite alternate;
-            transform-origin: top left;
-        }
-        .sakura-rotate {
-            animation: sakura-rotate 120s linear infinite;
-        }
+        .sakura-sway { animation: sakura-sway 15s ease-in-out infinite alternate; transform-origin: top left; }
+        .sakura-rotate { animation: sakura-rotate 120s linear infinite; }
+
         @keyframes sakura-fall {
             0% { transform: translate3d(0, -10%, 0) rotateZ(0deg); opacity: 0; }
             10% { opacity: 1; }
@@ -80,72 +64,55 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 3D Carousel — FIX #2: pastikan perspective dan transform-style benar */
-        .carousel-container {
-            perspective: 1200px;
-            perspective-origin: 50% 50%;
-            transform-style: preserve-3d;
-        }
-        .carousel-item {
-            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-        }
+        .carousel-container { perspective: 1200px; perspective-origin: 50% 50%; transform-style: preserve-3d; }
+        .carousel-item { transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform, opacity; backface-visibility: hidden; }
 
-        /* Audio spin */
         .spin-slow { animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        /* FIX #5: Accordion max-height cukup besar */
+
         .accordion-content {
             transition: max-height 0.4s ease-out, opacity 0.3s ease-out, padding 0.3s ease;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
+            max-height: 0; opacity: 0; overflow: hidden;
         }
-        .accordion-content.active {
-            max-height: 800px;
-            opacity: 1;
-        }
+        .accordion-content.active { max-height: 800px; opacity: 1; }
 
-        /* RSVP toggle active state */
-        .rsvp-btn-active {
-            background-color: #CD2C48 !important;
-            color: white !important;
-            border-color: #CD2C48 !important;
-        }
-        .rsvp-btn-inactive {
-            background-color: white !important;
-            color: #CD2C48 !important;
-            border-color: #CD2C48 !important;
-        }
+        .rsvp-btn-active { background-color: #CD2C48 !important; color: white !important; border-color: #CD2C48 !important; }
+        .rsvp-btn-inactive { background-color: white !important; color: #CD2C48 !important; border-color: #CD2C48 !important; }
 
-        /* Toast notification */
         .toast-notification {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
+            position: fixed; bottom: 2rem; left: 50%;
             transform: translateX(-50%) translateY(10px);
-            background: rgba(0,0,0,0.85);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-            pointer-events: none;
+            background: rgba(0,0,0,0.85); color: white;
+            padding: 0.75rem 1.5rem; border-radius: 9999px;
+            font-size: 0.875rem; font-weight: 600; z-index: 9999;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
         }
-        .toast-notification.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Countdown digit box */
+        .countdown-digit {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 0.75rem; min-width: 70px; padding: 0.75rem 0.5rem;
+            backdrop-filter: blur(4px);
+        }
+        .countdown-digit .num {
+            font-family: 'Tenor Sans', sans-serif; font-size: 2rem; font-weight: 700;
+            line-height: 1; color: white;
+        }
+        .countdown-digit .label {
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.7); margin-top: 0.35rem;
+        }
+        .countdown-sep {
+            font-family: 'Tenor Sans', sans-serif; font-size: 1.75rem;
+            color: #FA9ABC; font-weight: 700; padding: 0 0.15rem;
+            align-self: flex-start; margin-top: 0.5rem;
         }
     </style>
 </head>
 <body class="font-body m-0 p-0">
 
-    <!-- Toast container -->
     <div id="toast" class="toast-notification"></div>
 
     <!-- Audio Player Button -->
@@ -155,13 +122,12 @@
         <audio id="bg-music" src="https://api.mer.id/api/root_media/music/music-bg-theme-2b18e5bf-40a7-459d-82a0-e6fb4be2857e.mp3" loop preload="auto"></audio>
     </div>
 
-    <!-- FIX #1: Main Layout — mobile stacked (no overflow-hidden on body), desktop 60/40 -->
+    <!-- Main Layout -->
     <div class="flex flex-col lg:flex-row w-full min-h-screen">
 
-        <!-- LEFT PANEL — Fixed on desktop, normal flow on mobile -->
+        <!-- LEFT PANEL -->
         <div id="left-panel" class="relative w-full lg:w-[60%] lg:fixed lg:top-0 lg:h-screen bg-gradient-to-bl from-color3 via-white/90 to-white flex flex-col justify-center items-center overflow-hidden z-0 shrink-0">
 
-            <!-- Sakura Falling -->
             <div class="sakurafall absolute inset-0 pointer-events-none z-30">
                 <img src="https://mer.id/tema/sakura/sakura4.webp" class="sakura-petal w-10 h-10 opacity-90" style="left:8%; animation-duration:18s; --sway-x:60px;">
                 <img src="https://mer.id/tema/sakura/sakura5.webp" class="sakura-petal w-8 h-8 opacity-80" style="left:25%; animation-duration:22s; animation-delay:4s; --sway-x:80px;">
@@ -171,12 +137,10 @@
                 <img src="https://mer.id/tema/sakura/sakura5.webp" class="sakura-petal w-8 h-8 opacity-80" style="left:90%; animation-duration:23s; animation-delay:3s; --sway-x:65px;">
             </div>
 
-            <!-- Static Sakura Decorations -->
             <img src="https://mer.id/tema/sakura/sakura1.webp" class="absolute z-10 max-w-lg top-0 -left-10 sakura-sway opacity-90 pointer-events-none" alt="Sakura Top Left">
             <img src="https://mer.id/tema/sakura/sakura8.webp" class="absolute z-10 w-full bottom-0 md:-bottom-10 pointer-events-none" alt="Sakura Bottom">
             <img src="https://mer.id/tema/sakura/sakura2.webp" class="absolute z-10 max-w-xl -bottom-12 -right-12 sakura-sway opacity-90 pointer-events-none" alt="Sakura Bottom Right">
 
-            <!-- Center Content -->
             <div class="relative z-40 flex flex-col items-center p-8 text-center mt-[-10vh]">
                 <div class="text-sm font-bold uppercase tracking-[3px] mb-4 text-gray-800">Save The Date</div>
                 <div class="flex items-center justify-center gap-2 md:gap-6 text-4xl md:text-6xl lg:text-7xl font-bold uppercase font-title text-color1 mb-10">
@@ -187,23 +151,30 @@
                 <div class="mb-4 text-sm text-gray-600 uppercase tracking-widest">Kepada</div>
                 <div class="text-xl font-semibold text-gray-900">Ardiani Safitri</div>
                 <div class="mt-1 text-gray-600">Semarang</div>
-
-                <!-- FIX #6: Button triggers music + scroll, not body click -->
-                <button onclick="openInvitation()" class="mt-8 lg:hidden bg-color1 text-white px-8 py-3 rounded-full font-semibold hover:bg-[#b92841] transition-colors shadow-lg cursor-pointer">
-                    Buka Undangan
-                </button>
+                <button onclick="openInvitation()" class="mt-8 lg:hidden bg-color1 text-white px-8 py-3 rounded-full font-semibold hover:bg-[#b92841] transition-colors shadow-lg cursor-pointer">Buka Undangan</button>
             </div>
         </div>
 
-        <!-- RIGHT PANEL — Scrollable, offset on desktop -->
+        <!-- RIGHT PANEL -->
         <div id="right-panel" class="w-full lg:w-[40%] lg:ml-[60%] lg:h-screen lg:overflow-y-auto scroll-panel bg-color1 text-white relative z-10 shadow-[-10px_0_30px_rgba(0,0,0,0.1)]">
 
             <!-- HERO RIGHT -->
             <div class="relative min-h-[500px] flex flex-col justify-center items-center p-8 overflow-hidden bg-color1">
-                <svg width="544" height="544" viewBox="0 0 544 544" fill="none" class="absolute -top-[20%] -right-[20%] sakura-rotate opacity-50 pointer-events-none">
-                    <path d="M458.706 458.708C561.822 355.592 561.822 188.408 458.706 85.2916C355.59-17.8246 188.406-17.8245 85.2894 85.2916C-17.8268 188.408-17.8268 355.592 85.2894 458.708C188.406 561.825 355.59 561.825 458.706 458.708Z" fill="var(--color-6)"></path>
-                    <path d="M544 270.803H284.125L539.007 220.102L538.536 217.769L283.666 268.458L523.751 169.015L522.832 166.802L282.747 266.258L498.824 121.88L497.494 119.898L281.417 264.263L465.18 80.512L463.488 78.8195L279.737 262.583L424.102 46.5059L422.12 45.1762L277.742 261.253L377.198 21.1676L374.985 20.2489L275.542 260.334L326.231 5.46417L323.898 4.9927L273.197 259.875V-7.62939e-06H270.803V259.875L220.102 4.9927L217.757 5.46417L268.458 260.334L169.015 20.2489L166.802 21.1676L266.258 261.253L121.88 45.1762L119.886 46.5059L264.263 262.583L80.512 78.8195L78.8196 80.512L262.583 264.263L46.506 119.898L45.1762 121.88L261.253 266.258L21.1676 166.802L20.2489 169.015L260.334 268.458L5.46418 217.769L4.99271 220.102L259.875 270.803H0V273.197H259.875L4.99271 323.898L5.46418 326.231L260.334 275.542L20.2489 374.985L21.1676 377.198L261.253 277.742L45.1762 422.12L46.506 424.102L262.583 279.737L78.8196 463.488L80.512 465.18L264.263 281.417L119.886 497.494L121.88 498.824L266.258 282.747L166.802 522.832L169.015 523.751L268.458 283.666L217.757 538.536L220.102 539.007L270.803 284.125V544H273.197V284.125L323.898 539.007L326.231 538.536L275.542 283.666L374.985 523.751L377.198 522.832L277.742 282.747L422.12 498.824L424.102 497.494L279.737 281.417L463.488 465.18L465.18 463.488L281.417 279.737L497.494 424.102L498.824 422.12L282.747 277.742L522.832 377.198L523.751 374.985L283.666 275.542L538.536 326.231L539.007 323.898L284.125 273.197H544V270.803Z" fill="#FA9ABC" opacity="0.3"></path>
+
+                <!-- FIX: Rotating ornament — garis putih transparan sekarang terlihat -->
+                <svg width="544" height="544" viewBox="0 0 544 544" fill="none" class="absolute -top-[20%] -right-[20%] sakura-rotate opacity-60 pointer-events-none">
+                    <!-- Lingkaran luar gradient pink -->
+                    <path d="M458.706 458.708C561.822 355.592 561.822 188.408 458.706 85.2916C355.59-17.8246 188.406-17.8245 85.2894 85.2916C-17.8268 188.408-17.8268 355.592 85.2894 458.708C188.406 561.825 355.59 561.825 458.706 458.708Z" fill="url(#heroGrad)"></path>
+                    <!-- Garis-garis putih transparan (spoke pattern) — FIX: warna putih, opacity lebih tinggi -->
+                    <path d="M544 270.803H284.125L539.007 220.102L538.536 217.769L283.666 268.458L523.751 169.015L522.832 166.802L282.747 266.258L498.824 121.88L497.494 119.898L281.417 264.263L465.18 80.512L463.488 78.8195L279.737 262.583L424.102 46.5059L422.12 45.1762L277.742 261.253L377.198 21.1676L374.985 20.2489L275.542 260.334L326.231 5.46417L323.898 4.9927L273.197 259.875V0H270.803V259.875L220.102 4.9927L217.757 5.46417L268.458 260.334L169.015 20.2489L166.802 21.1676L266.258 261.253L121.88 45.1762L119.886 46.5059L264.263 262.583L80.512 78.8195L78.8196 80.512L262.583 264.263L46.506 119.898L45.1762 121.88L261.253 266.258L21.1676 166.802L20.2489 169.015L260.334 268.458L5.46418 217.769L4.99271 220.102L259.875 270.803H0V273.197H259.875L4.99271 323.898L5.46418 326.231L260.334 275.542L20.2489 374.985L21.1676 377.198L261.253 277.742L45.1762 422.12L46.506 424.102L262.583 279.737L78.8196 463.488L80.512 465.18L264.263 281.417L119.886 497.494L121.88 498.824L266.258 282.747L166.802 522.832L169.015 523.751L268.458 283.666L217.757 538.536L220.102 539.007L270.803 284.125V544H273.197V284.125L323.898 539.007L326.231 538.536L275.542 283.666L374.985 523.751L377.198 522.832L277.742 282.747L422.12 498.824L424.102 497.494L279.737 281.417L463.488 465.18L465.18 463.488L281.417 279.737L497.494 424.102L498.824 422.12L282.747 277.742L522.832 377.198L523.751 374.985L283.666 275.542L538.536 326.231L539.007 323.898L284.125 273.197H544V270.803Z" fill="white" opacity="0.18"></path>
+                    <defs>
+                        <linearGradient id="heroGrad" x1="139.732" y1="532.115" x2="443.538" y2="-65.3784" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#CD2C48"></stop>
+                            <stop offset="1" stop-color="#FA9ABC"></stop>
+                        </linearGradient>
+                    </defs>
                 </svg>
+
                 <p class="text-lg mb-4 text-center z-10 tracking-widest uppercase">Wedding Invitation</p>
                 <h2 class="text-4xl md:text-5xl font-title font-bold text-center uppercase z-10 mb-8 flex flex-col items-center">
                     Chyntia
@@ -256,10 +227,13 @@
                 <path d="M400 90.2182H0V85.0899C0.959919 85.0212 1.93193 84.9962 2.91366 85.0218C16.3741 85.3728 28.3925 76.579 32.2206 63.5775C36.8575 47.8287 53.2159 38.7715 68.9032 43.267C81.8543 46.9785 95.6681 41.4701 102.586 29.8355C110.967 15.7438 129.045 11.0682 143.129 19.3508C154.757 26.1895 169.495 24.3145 179.07 14.7785C190.666 3.22749 209.335 3.22749 220.931 14.7785C230.505 24.3145 245.243 26.1895 256.871 19.3508C270.955 11.0682 289.034 15.7438 297.415 29.8355C304.333 41.4698 318.146 46.9785 331.097 43.267C346.785 38.7717 363.142 47.8288 367.779 63.5775C371.607 76.5791 383.626 85.3729 397.086 85.0218C398.069 84.9962 399.04 85.0212 400 85.0899V90.2182Z" fill="#CD2C48"></path>
             </svg>
 
-            <!-- GALLERY 3D COVERFLOW — FIX #2: transform diperbaiki -->
+            <!-- GALLERY 3D COVERFLOW -->
             <div class="bg-color1 py-12 relative overflow-hidden">
-                <img src="https://mer.id/tema/sakura/sakura3.webp" class="absolute left-0 right-0 mx-auto w-64 -top-10 sakura-sway pointer-events-none opacity-80">
-                <h2 class="text-center font-title text-2xl tracking-[3px] uppercase mb-12">Love Album Gallery</h2>
+                <!-- FIX: Ornamen sakura dipindahkan ke ATAS judul, diposisikan sebagai header dekoratif -->
+                <div class="relative mb-2 flex justify-center">
+                    <img src="https://mer.id/tema/sakura/sakura3.webp" class="w-48 h-auto sakura-sway pointer-events-none opacity-90 -mb-8" alt="Sakura ornament">
+                </div>
+                <h2 class="text-center font-title text-2xl tracking-[3px] uppercase mb-12 relative z-[2]">Love Album Gallery</h2>
 
                 <div class="relative w-full h-80 flex items-center justify-center">
                     <div id="carousel" class="carousel-container relative w-full h-full"></div>
@@ -272,11 +246,52 @@
                 </div>
             </div>
 
-            <!-- VIDEO -->
-            <div class="bg-color1 pb-16 px-8">
+            <!-- VIDEO + COUNTDOWN SECTION -->
+            <div class="bg-color1 pb-0 px-8">
                 <h2 class="text-center font-title text-2xl tracking-[3px] uppercase mb-8">Prewedding Clip</h2>
                 <div class="relative w-full max-w-2xl mx-auto aspect-video rounded-xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.3)] border-4 border-white/20">
                     <video src="https://mer.id/undangan/sepeda/video.mp4" class="w-full h-full object-cover bg-black" controls preload="metadata" poster="https://mer.id/undangan/sepeda/foto-10.jpg"></video>
+                </div>
+            </div>
+
+            <!-- COUNTDOWN — sesuai screenshot 2 -->
+            <div class="bg-color1 px-8 pt-12 pb-16 relative overflow-hidden">
+                <!-- Ornamen bunga pink di bawah countdown -->
+                <img src="https://mer.id/tema/sakura/sakura2.webp" class="absolute -bottom-16 -right-8 w-56 opacity-40 pointer-events-none" alt="Sakura bottom">
+                <img src="https://mer.id/tema/sakura/sakura3.webp" class="absolute -bottom-12 -left-8 w-44 opacity-30 pointer-events-none transform -scale-x-[-1]" alt="Sakura bottom left">
+
+                <div class="text-center mb-8 relative z-[2]">
+                    <div class="text-sm font-bold uppercase tracking-[4px] text-color7 mb-2">Save The Date</div>
+                    <p class="text-white/70 text-sm italic">The day our greatest album drops</p>
+                </div>
+
+                <!-- Countdown digits -->
+                <div id="countdown" class="flex items-start justify-center gap-2 sm:gap-3 mb-10 relative z-[2] flex-wrap">
+                    <div class="countdown-digit">
+                        <span class="num" id="cd-days">00</span>
+                        <span class="label">Hari</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-digit">
+                        <span class="num" id="cd-hours">00</span>
+                        <span class="label">Jam</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-digit">
+                        <span class="num" id="cd-mins">00</span>
+                        <span class="label">Menit</span>
+                    </div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-digit">
+                        <span class="num" id="cd-secs">00</span>
+                        <span class="label">Detik</span>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-col items-center gap-3 relative z-[2]">
+                    <span class="inline-block bg-color7 text-color2 px-5 py-1.5 rounded-full text-sm font-semibold">Anda diundang disini</span>
+                    <span class="text-lg font-title font-bold">Resepsi Pernikahan</span>
                 </div>
             </div>
 
@@ -290,7 +305,6 @@
             <div class="bg-gradient-to-b from-color4 to-color5 px-8 py-16 relative">
                 <img src="https://mer.id/tema/sakura/sakura2.webp" class="absolute top-0 right-0 w-48 opacity-30 pointer-events-none transform translate-x-10 -translate-y-10">
 
-                <!-- Akad Nikah -->
                 <div class="mb-16">
                     <h2 class="text-3xl font-title text-center mb-8">Akad Nikah</h2>
                     <div class="bg-white/10 p-8 rounded-2xl backdrop-blur-sm border border-white/20">
@@ -314,7 +328,6 @@
                     </div>
                 </div>
 
-                <!-- Resepsi -->
                 <div class="mb-16">
                     <div class="text-center mb-6">
                         <span class="inline-block bg-color7 text-color2 px-4 py-1 rounded-full text-sm font-semibold mb-3">Anda diundang disini</span>
@@ -341,7 +354,6 @@
                     </div>
                 </div>
 
-                <!-- Ngunduh Mantu -->
                 <div class="mb-8">
                     <h2 class="text-3xl font-title text-center mb-8">Ngunduh Mantu</h2>
                     <div class="bg-white/10 p-8 rounded-2xl backdrop-blur-sm border border-white/20">
@@ -366,7 +378,7 @@
                 </div>
             </div>
 
-            <!-- FIX #3: Wave — gunakan flip vertikal bukan scale-x yang tidak valid -->
+            <!-- Wave flipped -->
             <div style="transform: scaleY(-1);">
                 <svg width="400" height="90" viewBox="0 0 400 90" fill="none" class="w-full h-auto" preserveAspectRatio="none">
                     <rect width="400" height="90" fill="white"></rect>
@@ -379,20 +391,14 @@
                 <h2 class="text-3xl font-title mb-6">Live Streaming</h2>
                 <div class="bg-white/90 text-gray-800 p-6 rounded-2xl shadow-md">
                     <div class="flex flex-col gap-4">
-                        <a href="https://meet.google.com/tez-pcrz-hzz" target="_blank" class="flex items-center justify-center gap-3 bg-color1 text-white py-3 rounded-full hover:bg-color2 transition cursor-pointer">
-                            <i class="ti ti-video text-xl"></i> Google Meet
-                        </a>
-                        <a href="https://us05web.zoom.us/j/89276608167" target="_blank" class="flex items-center justify-center gap-3 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition cursor-pointer">
-                            <i class="ti ti-brand-zoom text-xl"></i> Zoom
-                        </a>
-                        <a href="https://youtube.com/" target="_blank" class="flex items-center justify-center gap-3 bg-red-600 text-white py-3 rounded-full hover:bg-red-700 transition cursor-pointer">
-                            <i class="ti ti-brand-youtube text-xl"></i> YouTube
-                        </a>
+                        <a href="https://meet.google.com/tez-pcrz-hzz" target="_blank" class="flex items-center justify-center gap-3 bg-color1 text-white py-3 rounded-full hover:bg-color2 transition cursor-pointer"><i class="ti ti-video text-xl"></i> Google Meet</a>
+                        <a href="https://us05web.zoom.us/j/89276608167" target="_blank" class="flex items-center justify-center gap-3 bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition cursor-pointer"><i class="ti ti-brand-zoom text-xl"></i> Zoom</a>
+                        <a href="https://youtube.com/" target="_blank" class="flex items-center justify-center gap-3 bg-red-600 text-white py-3 rounded-full hover:bg-red-700 transition cursor-pointer"><i class="ti ti-brand-youtube text-xl"></i> YouTube</a>
                     </div>
                 </div>
             </div>
 
-            <!-- RSVP & DRESSCODE — FIX #4: toggle logic ditambahkan -->
+            <!-- RSVP & DRESSCODE -->
             <div class="bg-white text-gray-800 px-8 py-16 text-center">
                 <i class="ti ti-mail-opened text-5xl text-color1 mb-4"></i>
                 <h2 class="text-5xl font-title text-color1 mb-4">RSVP</h2>
@@ -401,7 +407,6 @@
                     <button id="btn-hadir" onclick="setRSVP('hadir')" class="rsvp-btn-active bg-color1 text-white border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer">Hadir</button>
                     <button id="btn-tidak" onclick="setRSVP('tidak')" class="rsvp-btn-inactive bg-white text-color1 border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer">Tidak Hadir</button>
                 </div>
-
                 <h2 class="text-4xl font-title text-color1 mb-4">Dresscode</h2>
                 <p class="mb-8 text-lg">Warna busana pada pernikahan kami</p>
                 <div class="flex justify-center items-center gap-8 mb-8">
@@ -455,7 +460,7 @@
                 </div>
             </div>
 
-            <!-- Wave: Dark Maroon → White -->
+            <!-- Wave flipped -->
             <div style="transform: scaleY(-1);">
                 <svg width="400" height="90" viewBox="0 0 400 90" fill="none" class="w-full h-auto" preserveAspectRatio="none">
                     <rect width="400" height="90" fill="#870A30"></rect>
@@ -465,11 +470,8 @@
 
             <!-- GIFTS -->
             <div class="bg-color2 px-8 py-16">
-                <h2 class="text-4xl font-title mb-4 flex items-center gap-3">
-                    <i class="ti ti-gift"></i> Hadiah
-                </h2>
+                <h2 class="text-4xl font-title mb-4 flex items-center gap-3"><i class="ti ti-gift"></i> Hadiah</h2>
                 <p class="mb-8 leading-relaxed text-white/90">Do'a restu Anda merupakan karunia yang sangat berarti bagi kami, terima kasih untuk yang berkenan memberikan tanda kasih.</p>
-
                 <div class="border-t border-b border-white/20 py-4">
                     <button onclick="toggleAccordion('acc-rekening')" class="w-full flex justify-between items-center text-xl font-semibold outline-none cursor-pointer">
                         <span>Transfer Rekening</span>
@@ -481,22 +483,17 @@
                                 <img src="https://mer.id/undangan/bank-bca.svg" alt="BCA" class="h-10 mb-4">
                                 <p class="text-xl font-bold tracking-wider mb-2">98122XXXX</p>
                                 <p class="text-sm mb-4">a.n. <b>Pramarta Chyntia Andita</b></p>
-                                <button onclick="copyText('98122XXXX')" class="text-color1 flex items-center gap-2 border border-color1 px-4 py-1.5 rounded-full hover:bg-color3 transition text-sm cursor-pointer">
-                                    <i class="ti ti-copy"></i> Salin No. Rekening
-                                </button>
+                                <button onclick="copyText('98122XXXX')" class="text-color1 flex items-center gap-2 border border-color1 px-4 py-1.5 rounded-full hover:bg-color3 transition text-sm cursor-pointer"><i class="ti ti-copy"></i> Salin No. Rekening</button>
                             </div>
                             <div class="bg-white text-black p-6 rounded-xl flex flex-col items-center">
                                 <img src="https://mer.id/undangan/bank-mandiri.svg" alt="Mandiri" class="h-10 mb-4">
                                 <p class="text-xl font-bold tracking-wider mb-2">75021XXXXX</p>
                                 <p class="text-sm mb-4">a.n. <b>Rian Nugraha</b></p>
-                                <button onclick="copyText('75021XXXXX')" class="text-color1 flex items-center gap-2 border border-color1 px-4 py-1.5 rounded-full hover:bg-color3 transition text-sm cursor-pointer">
-                                    <i class="ti ti-copy"></i> Salin No. Rekening
-                                </button>
+                                <button onclick="copyText('75021XXXXX')" class="text-color1 flex items-center gap-2 border border-color1 px-4 py-1.5 rounded-full hover:bg-color3 transition text-sm cursor-pointer"><i class="ti ti-copy"></i> Salin No. Rekening</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="border-b border-white/20 py-4">
                     <button onclick="toggleAccordion('acc-kado')" class="w-full flex justify-between items-center text-xl font-semibold outline-none cursor-pointer">
                         <span>Kirim Kado Fisik</span>
@@ -507,9 +504,7 @@
                             <div class="bg-white text-black p-6 rounded-xl text-center">
                                 <p class="font-bold text-lg mb-2">Pramarta Chyntia Andita</p>
                                 <p class="text-sm mb-4">Jl. Jenderal Sudirman No. 3A Blok 4, Krapyak, Tembalang, Semarang</p>
-                                <button onclick="copyText('Jl. Jenderal Sudirman No. 3A Blok 4, Krapyak, Tembalang, Semarang')" class="text-color1 flex mx-auto items-center gap-2 border border-color1 px-4 py-1.5 rounded-full hover:bg-color3 transition text-sm cursor-pointer">
-                                    <i class="ti ti-copy"></i> Salin Alamat
-                                </button>
+                                <button onclick="copyText('Jl. Jenderal Sudirman No. 3A Blok 4, Krapyak, Tembalang, Semarang')" class="text-color1 flex mx-auto items-center gap-2 border border-color1 px-4 py-1.5 rounded-full hover:bg-color3 transition text-sm cursor-pointer"><i class="ti ti-copy"></i> Salin Alamat</button>
                             </div>
                         </div>
                     </div>
@@ -518,9 +513,7 @@
 
             <!-- UCAPAN -->
             <div class="bg-color2 px-8 py-12">
-                <h2 class="text-3xl font-title mb-6 flex items-center gap-3">
-                    <i class="ti ti-message-circle"></i> Ucapan
-                </h2>
+                <h2 class="text-3xl font-title mb-6 flex items-center gap-3"><i class="ti ti-message-circle"></i> Ucapan</h2>
                 <div class="bg-white/10 p-6 rounded-xl border border-white/20">
                     <input id="wish-name" type="text" placeholder="Nama Anda" class="w-full bg-white text-black px-4 py-3 rounded-lg mb-4 outline-none">
                     <textarea id="wish-msg" placeholder="Tulis ucapan untuk kedua mempelai..." rows="4" class="w-full bg-white text-black px-4 py-3 rounded-lg mb-4 outline-none resize-none"></textarea>
@@ -558,9 +551,31 @@
     </div>
 
     <script>
-        // =============================================
-        // DATA — Tersentralisasi untuk kemudahan edit
-        // =============================================
+        // ============================================================
+        // KONFIGURASI — Ganti dari backend dengan format ini
+        // ============================================================
+        // Format: ISO 8601 dengan timezone WIB (+07:00)
+        // Backend cukup mengganti string ini, tidak perlu ubah logic
+        const COUNTDOWN_CONFIG = {
+            // Target waktu countdown (ISO 8601)
+            // Ganti nilai ini dari backend:
+            //   PHP:   date('c', $timestamp) — pastikan timezone Asia/Jakarta
+            //   Node:  new Date().toISOString() — lalu adjust ke WIB
+            //   Python: datetime.isoformat() + '+07:00'
+            targetISO: "2026-08-11T08:00:00+07:00",
+
+            // Label bisa disesuaikan bahasa
+            labels: {
+                days:  "Hari",
+                hours: "Jam",
+                mins:  "Menit",
+                secs:  "Detik"
+            },
+
+            // Pesan jika countdown selesai (opsional)
+            finishedMessage: "Hari Bahagia Telah Tiba!"
+        };
+
         const WEDDING = {
             couple: { bride: 'Pramarta Chyntia Andita', groom: 'Rian Nugraha' },
             gallery: [
@@ -573,9 +588,9 @@
             ]
         };
 
-        // =============================================
+        // ============================================================
         // 1. MUSIC PLAYER
-        // =============================================
+        // ============================================================
         const audio = document.getElementById('bg-music');
         const vinylDisc = document.getElementById('vinyl-disc');
         const musicIcon = document.getElementById('music-icon');
@@ -592,16 +607,12 @@
                     vinylDisc.style.animationPlayState = 'running';
                     vinylDisc.style.opacity = '1';
                     musicIcon.style.opacity = '0';
-                }).catch(e => console.log('Audio blocked:', e));
+                }).catch(e => {});
             }
             isPlaying = !isPlaying;
         });
 
-        // =============================================
-        // FIX #6: Open Invitation — musik + scroll
-        // =============================================
         function openInvitation() {
-            // Start music
             if (!isPlaying) {
                 audio.play().then(() => {
                     vinylDisc.style.animationPlayState = 'running';
@@ -610,113 +621,74 @@
                     isPlaying = true;
                 }).catch(e => {});
             }
-            // Scroll to right panel on mobile
             document.getElementById('right-panel').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // =============================================
-        // 2. ACCORDION
-        // =============================================
-        function toggleAccordion(id) {
-            const content = document.getElementById(id);
-            const icon = document.getElementById('icon-' + id);
-            if (content.classList.contains('active')) {
-                content.classList.remove('active');
-                icon.style.transform = 'rotate(0deg)';
-                icon.classList.remove('ti-circle-minus');
-                icon.classList.add('ti-circle-plus');
-            } else {
-                // Close other accordions first
-                document.querySelectorAll('.accordion-content.active').forEach(el => {
-                    el.classList.remove('active');
-                    const otherId = el.id;
-                    const otherIcon = document.getElementById('icon-' + otherId);
-                    if (otherIcon) {
-                        otherIcon.style.transform = 'rotate(0deg)';
-                        otherIcon.classList.remove('ti-circle-minus');
-                        otherIcon.classList.add('ti-circle-plus');
+        // ============================================================
+        // 2. COUNTDOWN TIMER
+        // ============================================================
+        function initCountdown() {
+            // Set labels dari config
+            const labelEls = document.querySelectorAll('.countdown-digit .label');
+            if (labelEls.length >= 4) {
+                labelEls[0].textContent = COUNTDOWN_CONFIG.labels.days;
+                labelEls[1].textContent = COUNTDOWN_CONFIG.labels.hours;
+                labelEls[2].textContent = COUNTDOWN_CONFIG.labels.mins;
+                labelEls[3].textContent = COUNTDOWN_CONFIG.labels.secs;
+            }
+
+            const targetDate = new Date(COUNTDOWN_CONFIG.targetISO);
+            const elDays  = document.getElementById('cd-days');
+            const elHours = document.getElementById('cd-hours');
+            const elMins  = document.getElementById('cd-mins');
+            const elSecs  = document.getElementById('cd-secs');
+
+            function tick() {
+                const now = new Date();
+                let diff = targetDate.getTime() - now.getTime();
+
+                if (diff <= 0) {
+                    // Countdown selesai
+                    elDays.textContent = '00';
+                    elHours.textContent = '00';
+                    elMins.textContent = '00';
+                    elSecs.textContent = '00';
+                    if (COUNTDOWN_CONFIG.finishedMessage) {
+                        document.getElementById('countdown').innerHTML =
+                            '<div class="text-2xl font-title font-bold text-center text-white">' +
+                            COUNTDOWN_CONFIG.finishedMessage + '</div>';
                     }
+                    return;
+                }
+
+                // Hitung selisih
+                const totalSeconds = Math.floor(diff / 1000);
+                const days  = Math.floor(totalSeconds / 86400);
+                const hours = Math.floor((totalSeconds % 86400) / 3600);
+                const mins  = Math.floor((totalSeconds % 3600) / 60);
+                const secs  = totalSeconds % 60;
+
+                // Update DOM dengan padding 2 digit
+                elDays.textContent  = String(days).padStart(2, '0');
+                elHours.textContent = String(hours).padStart(2, '0');
+                elMins.textContent  = String(mins).padStart(2, '0');
+                elSecs.textContent  = String(secs).padStart(2, '0');
+
+                requestAnimationFrame(() => {
+                    setTimeout(tick, 1000 - (Date.now() % 1000)); // Sync ke detik tepat
                 });
-                content.classList.add('active');
-                icon.style.transform = 'rotate(180deg)';
-                icon.classList.remove('ti-circle-plus');
-                icon.classList.add('ti-circle-minus');
             }
+
+            tick();
         }
 
-        // =============================================
-        // 3. CLIPBOARD — dengan fallback & toast
-        // =============================================
-        function copyText(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => showToast('Berhasil disalin!')).catch(() => fallbackCopy(text));
-            } else {
-                fallbackCopy(text);
-            }
-        }
-        function fallbackCopy(text) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.cssText = 'position:fixed;opacity:0;left:-9999px;';
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast('Berhasil disalin!');
-        }
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2200);
-        }
-
-        // =============================================
-        // FIX #4: RSVP TOGGLE
-        // =============================================
-        let rsvpState = 'hadir';
-        function setRSVP(state) {
-            rsvpState = state;
-            const btnHadir = document.getElementById('btn-hadir');
-            const btnTidak = document.getElementById('btn-tidak');
-            if (state === 'hadir') {
-                btnHadir.className = 'rsvp-btn-active bg-color1 text-white border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
-                btnTidak.className = 'rsvp-btn-inactive bg-white text-color1 border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
-            } else {
-                btnTidak.className = 'rsvp-btn-active bg-color1 text-white border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
-                btnHadir.className = 'rsvp-btn-inactive bg-white text-color1 border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
-            }
-            showToast(state === 'hadir' ? 'Konfirmasi: Hadir' : 'Konfirmasi: Tidak Hadir');
-        }
-
-        // =============================================
-        // UCAPAN — kirim & render
-        // =============================================
-        function sendWish() {
-            const name = document.getElementById('wish-name').value.trim();
-            const msg = document.getElementById('wish-msg').value.trim();
-            if (!name || !msg) return;
-            const list = document.getElementById('wish-list');
-            const div = document.createElement('div');
-            div.className = 'bg-white/5 p-4 rounded-xl border border-white/10';
-            div.innerHTML = '<p class="font-bold text-sm mb-1">' + escapeHTML(name) + '</p><p class="text-sm text-white/80">' + escapeHTML(msg) + '</p>';
-            list.insertBefore(div, list.firstChild);
-            document.getElementById('wish-name').value = '';
-            document.getElementById('wish-msg').value = '';
-            showToast('Ucapan terkirim!');
-        }
-        function escapeHTML(str) {
-            const d = document.createElement('div');
-            d.textContent = str;
-            return d.innerHTML;
-        }
-
-        // =============================================
-        // FIX #2: 3D COVERFLOW CAROUSEL
-        // =============================================
+        // ============================================================
+        // 3. 3D COVERFLOW CAROUSEL + AUTO-SLIDE
+        // ============================================================
         const images = WEDDING.gallery;
         const carousel = document.getElementById('carousel');
         let currentIndex = 0;
+        let autoSlideInterval = null;
 
         function initCarousel() {
             carousel.innerHTML = '';
@@ -729,21 +701,20 @@
                 img.style.height = '14rem';
                 img.style.left = '50%';
                 img.style.top = '50%';
-                img.onclick = () => { currentIndex = index; updateCarousel(); };
+                img.onclick = () => { currentIndex = index; updateCarousel(); resetAutoSlide(); };
                 carousel.appendChild(img);
             });
             updateCarousel();
+            startAutoSlide();
         }
 
         function updateCarousel() {
             const items = carousel.children;
             const total = items.length;
-
             for (let i = 0; i < total; i++) {
                 const offset = i - currentIndex;
                 const item = items[i];
                 let scale, tx, tz, opacity, zIndex;
-
                 if (offset === 0) {
                     scale = 1.15; tx = 0; tz = 160; opacity = 1; zIndex = 100;
                 } else if (Math.abs(offset) === 1) {
@@ -752,11 +723,8 @@
                     scale = 0.72; tx = offset * 95; tz = 20; opacity = 0.6; zIndex = 80;
                 } else {
                     scale = 0.5; tz = -40; opacity = 0; zIndex = 10;
-                    // Clamp tx to prevent items flying too far
                     tx = (offset > 0 ? 1 : -1) * 260;
                 }
-
-                // FIX #2: Semua dalam satu translate3d — tidak mix translate + translate3d
                 item.style.transform = 'translate3d(calc(-50% + ' + tx + 'px), -50%, ' + tz + 'px) scale(' + scale + ')';
                 item.style.opacity = opacity;
                 item.style.zIndex = zIndex;
@@ -768,9 +736,22 @@
             if (currentIndex < 0) currentIndex = images.length - 1;
             if (currentIndex >= images.length) currentIndex = 0;
             updateCarousel();
+            resetAutoSlide();
         }
 
-        // Touch/swipe support for carousel
+        // FIX: Auto-slide setiap 4 detik
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                updateCarousel();
+            }, 4000);
+        }
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+        }
+
+        // Touch/swipe
         let touchStartX = 0;
         carousel.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
         carousel.addEventListener('touchend', (e) => {
@@ -778,11 +759,90 @@
             if (Math.abs(diff) > 50) moveCarousel(diff > 0 ? 1 : -1);
         }, { passive: true });
 
-        // =============================================
+        // ============================================================
+        // 4. ACCORDION
+        // ============================================================
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+                icon.classList.remove('ti-circle-minus');
+                icon.classList.add('ti-circle-plus');
+            } else {
+                document.querySelectorAll('.accordion-content.active').forEach(el => {
+                    el.classList.remove('active');
+                    const oi = document.getElementById('icon-' + el.id);
+                    if (oi) { oi.style.transform = 'rotate(0deg)'; oi.classList.remove('ti-circle-minus'); oi.classList.add('ti-circle-plus'); }
+                });
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                icon.classList.remove('ti-circle-plus');
+                icon.classList.add('ti-circle-minus');
+            }
+        }
+
+        // ============================================================
+        // 5. CLIPBOARD
+        // ============================================================
+        function copyText(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => showToast('Berhasil disalin!')).catch(() => fbCopy(text));
+            } else { fbCopy(text); }
+        }
+        function fbCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;left:-9999px;';
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+            document.body.removeChild(ta); showToast('Berhasil disalin!');
+        }
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        // ============================================================
+        // 6. RSVP TOGGLE
+        // ============================================================
+        function setRSVP(state) {
+            const bh = document.getElementById('btn-hadir');
+            const bt = document.getElementById('btn-tidak');
+            if (state === 'hadir') {
+                bh.className = 'rsvp-btn-active bg-color1 text-white border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
+                bt.className = 'rsvp-btn-inactive bg-white text-color1 border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
+            } else {
+                bt.className = 'rsvp-btn-active bg-color1 text-white border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
+                bh.className = 'rsvp-btn-inactive bg-white text-color1 border-2 border-color1 px-8 py-3 rounded-full transition shadow-md w-1/2 font-semibold cursor-pointer';
+            }
+            showToast(state === 'hadir' ? 'Konfirmasi: Hadir' : 'Konfirmasi: Tidak Hadir');
+        }
+
+        // ============================================================
+        // 7. UCAPAN
+        // ============================================================
+        function sendWish() {
+            const name = document.getElementById('wish-name').value.trim();
+            const msg = document.getElementById('wish-msg').value.trim();
+            if (!name || !msg) return;
+            const list = document.getElementById('wish-list');
+            const div = document.createElement('div');
+            div.className = 'bg-white/5 p-4 rounded-xl border border-white/10';
+            div.innerHTML = '<p class="font-bold text-sm mb-1">' + esc(name) + '</p><p class="text-sm text-white/80">' + esc(msg) + '</p>';
+            list.insertBefore(div, list.firstChild);
+            document.getElementById('wish-name').value = '';
+            document.getElementById('wish-msg').value = '';
+            showToast('Ucapan terkirim!');
+        }
+        function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+        // ============================================================
         // INIT
-        // =============================================
+        // ============================================================
         window.addEventListener('DOMContentLoaded', () => {
             initCarousel();
+            initCountdown();
         });
     </script>
 </body>
