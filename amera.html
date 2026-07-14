@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Wedding of Bagas & Naila</title>
+    <meta name="description" content="Wedding Invitation Bagas & Naila">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕊️</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3d342b', /* Dark Heritage Brown */
+                        accent: '#8b7355', /* Classic Gold/Brown */
+                        bglight: '#f7f5f0', /* Soft beige background */
+                        cardbg: '#ffffff',
+                    },
+                    fontFamily: {
+                        title: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"Montserrat"', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 4s linear infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'float-slow': 'floating 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        floating: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(2deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: var(--bglight);
+            color: #3d342b;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #8b7355; border-radius: 10px; }
+
+        /* Cover Transition */
+        .cover-open { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+        
+        /* Fade In Animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Timeline Styles */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 1px;
+            background: #8b7355;
+            transform: translateX(-50%);
+            opacity: 0.3;
+        }
+        @media (max-width: 768px) {
+            .timeline-line::before { left: 24px; }
+        }
+
+        /* Nav Menu Pill */
+        .nav-pill-btn {
+            color: #9ca3af;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .nav-pill-btn:hover, .nav-pill-btn.active {
+            color: #ffffff;
+            background-color: #8b7355;
+            transform: translateY(-2px);
+        }
+
+        /* Ornament Blending */
+        .ornament-blend {
+            mix-blend-mode: multiply;
+            opacity: 0.85;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Pillar Borders Frame */
+        .pillar-left {
+            background-image: url('https://attarivitation.com/wp-content/uploads/2026/02/Sandhayu-Illustrasi-Pillar-scaled-1-91x1024.webp');
+            background-repeat: repeat-y;
+            background-size: contain;
+        }
+        .pillar-right {
+            background-image: url('https://attarivitation.com/wp-content/uploads/2026/02/Sandhayu-Illustrasi-Pillar-scaled-1-91x1024.webp');
+            background-repeat: repeat-y;
+            background-size: contain;
+            transform: scaleX(-1);
+        }
+    </style>
+</head>
+<body class="font-body antialiased text-primary bg-[#e6e2d8]">
+
+    <!-- AUDIO ELEMENT -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://attarivitation.com/wp-content/uploads/2026/02/Bidadari-Timur-Irawadi.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- FLOATING CONTROLS (Top Right) -->
+    <div id="floatingControls" class="fixed top-6 right-6 z-[60] flex gap-3 opacity-0 pointer-events-none transition-opacity duration-1000">
+        <button id="musicToggle" class="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm text-accent shadow-lg flex items-center justify-center hover:scale-110 transition-transform border border-accent/20">
+            <i id="musicIcon" class="fas fa-compact-disc animate-spin-slow"></i>
+        </button>
+    </div>
+
+    <!-- FLOATING NAV PILL (Bottom Center of the scrolling area) -->
+    <nav id="bottomNav" class="fixed bottom-6 left-1/2 lg:left-[70%] -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-1000 border border-accent/10">
+        <a href="#home" class="nav-pill-btn text-sm"><i class="fas fa-home"></i></a>
+        <a href="#couple" class="nav-pill-btn text-sm"><i class="fas fa-heart"></i></a>
+        <a href="#event" class="nav-pill-btn text-sm"><i class="fas fa-calendar-alt"></i></a>
+        <a href="#gallery" class="nav-pill-btn text-sm"><i class="fas fa-images"></i></a>
+        <a href="#wishes" class="nav-pill-btn text-sm"><i class="fas fa-comment-dots"></i></a>
+        <a href="#gift" class="nav-pill-btn text-sm"><i class="fas fa-gift"></i></a>
+    </nav>
+
+    <!-- COVER PAGE (Overlay until clicked) -->
+    <div id="coverPage" class="fixed inset-0 z-[100] w-full h-full bg-primary transition-transform duration-1000 ease-in-out flex flex-col justify-center items-center overflow-hidden">
+        
+        <!-- Video Background Cover -->
+        <div class="absolute inset-0 z-0">
+            <video class="w-full h-full object-cover opacity-50" autoplay muted loop playsinline>
+                <source src="https://byattari.com/wp-content/uploads/2025/11/SANDHAYU.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent"></div>
+        </div>
+
+        <!-- Content Cover -->
+        <div class="relative z-10 text-center text-white px-6 w-full max-w-lg mx-auto flex flex-col items-center">
+            <p class="font-body text-[10px] tracking-[0.3em] mb-4 uppercase text-[#d5c3aa]">The Wedding Of</p>
+            <h1 class="font-title text-6xl md:text-7xl mb-2 font-medium">Bagas</h1>
+            <h1 class="font-title text-5xl md:text-6xl mb-2 font-medium text-accent italic">&amp; Naila</h1>
+            
+            <div class="mt-12 mb-10 text-center bg-black/30 backdrop-blur-md px-8 py-6 rounded-2xl border border-[#d5c3aa]/30 w-full max-w-sm shadow-2xl relative overflow-hidden">
+                <!-- Cover Card Ornament -->
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-6.webp" class="absolute -top-6 -right-6 w-24 opacity-30">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-6.webp" class="absolute -bottom-6 -left-6 w-24 opacity-30 transform rotate-180">
+                
+                <p class="text-[10px] opacity-90 mb-2 font-body tracking-widest uppercase">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+                <h2 class="font-title text-3xl font-medium mt-2 mb-2 text-[#d5c3aa]">Tamu Undangan</h2>
+                <div class="w-12 h-px bg-[#d5c3aa]/50 mx-auto my-3"></div>
+                <p class="text-[9px] opacity-70 mt-2 font-body leading-relaxed max-w-[200px] mx-auto">Mohon maaf bila ada kesalahan pada penulisan nama/gelar</p>
+            </div>
+
+            <button onclick="openInvitation()" class="bg-[#8b7355] hover:bg-[#6e5a41] text-white font-body text-xs px-8 py-3.5 rounded-full shadow-xl transition-all hover:scale-105 active:scale-95 tracking-widest uppercase flex items-center gap-2">
+                <i class="far fa-envelope-open"></i> Buka Undangan
+            </button>
+        </div>
+    </div>
+
+    <!-- DESKTOP LEFT PANEL (FIXED VIDEO 60%) -->
+    <div class="hidden lg:block fixed left-0 top-0 w-[60%] h-screen z-0 bg-primary overflow-hidden">
+        <video class="absolute inset-0 w-full h-full object-cover opacity-80" autoplay muted loop playsinline>
+            <source src="https://byattari.com/wp-content/uploads/2025/11/SANDHAYU.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-black/20"></div>
+        <!-- Left Panel Ornaments -->
+        <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-3-1024x912.webp" class="absolute top-0 left-0 w-96 opacity-60 mix-blend-screen pointer-events-none transform -translate-x-12 -translate-y-12">
+        <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-4.webp" class="absolute bottom-0 left-0 w-80 opacity-60 mix-blend-screen pointer-events-none transform -translate-x-10 translate-y-10">
+    </div>
+
+    <!-- MAIN SCROLLING CONTENT (Right 40% on Desktop, 100% on Mobile) -->
+    <!-- The padding and margin logic creates the "card inside a frame" effect requested -->
+    <main id="mainContent" class="relative z-10 w-full lg:w-[40%] lg:ml-auto bg-[#e6e2d8] min-h-screen flex flex-col gap-6 p-4 lg:p-6 opacity-0 pointer-events-none transition-opacity duration-1000 pb-24 shadow-[-10px_0_30px_rgba(0,0,0,0.2)]">
+        
+        <!-- SECTION: HERO -->
+        <section id="home" class="bg-cardbg rounded-3xl p-8 md:p-12 shadow-sm flex flex-col items-center justify-center min-h-[90vh] text-center relative overflow-hidden border border-gray-100 fade-in-up">
+            <!-- Ornaments -->
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-3-1024x912.webp" class="absolute top-0 left-0 w-48 ornament-blend transform -translate-x-6 -translate-y-6">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-6.webp" class="absolute top-0 right-0 w-40 ornament-blend transform translate-x-6 -translate-y-2">
+            
+            <p class="font-body text-[10px] tracking-[0.3em] mb-4 uppercase text-gray-400">The Wedding Of</p>
+            <h1 class="font-title text-6xl md:text-7xl text-primary font-medium mb-1">Bagas</h1>
+            <h1 class="font-title text-5xl md:text-6xl text-accent font-medium italic mb-6">&amp; Naila</h1>
+            <p class="font-body text-xs tracking-[0.2em] mt-4 text-gray-500 font-medium">MINGGU, 15 JUNI 2025</p>
+
+            <div class="w-px h-20 bg-accent/30 my-8"></div>
+            
+            <p class="text-[10px] text-gray-500 leading-loose font-body italic max-w-xs mx-auto">
+                "Demikianlah mereka bukan lagi dua, melainkan satu. Karena itu, apa yang telah dipersatukan Allah, tidak boleh diceraikan manusia."<br><br>
+                <span class="font-bold not-italic">Matius 19:6</span>
+            </p>
+            
+            <!-- Bottom Ornament -->
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-4.webp" class="absolute bottom-0 right-0 w-48 ornament-blend transform translate-x-10 translate-y-10">
+        </section>
+
+        <!-- SECTION: COUPLE -->
+        <section id="couple" class="bg-cardbg rounded-3xl p-8 md:p-10 shadow-sm text-center relative overflow-hidden border border-gray-100 fade-in-up">
+            <!-- Ornaments -->
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-5.webp" class="absolute top-10 right-0 w-32 ornament-blend transform translate-x-12 opacity-40 animate-float-slow">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/UW-25FEB-159-Audrey-Gigih-branch-2-537x1024.webp" class="absolute top-40 left-0 w-24 ornament-blend transform -translate-x-6">
+            
+            <h2 class="font-title text-4xl text-primary mb-6 italic">Bride & Groom</h2>
+            
+            <p class="font-body text-[10px] leading-relaxed text-gray-500 mb-12 max-w-[280px] mx-auto">
+                Tuhan menjadikan segala sesuatu indah pada waktunya, indah saat mempertemukan, indah saat menumbuhkan cinta kasih, dan indah saat Ia mempersatukan kami dalam Pernikahan Kudus.
+            </p>
+
+            <div class="flex flex-col gap-16">
+                <!-- CPW -->
+                <div class="flex flex-col items-center fade-in-up relative z-10">
+                    <!-- Butterfly decoration -->
+                    <img src="https://attarivitation.com/wp-content/uploads/2026/02/Kupu-759x1024.webp" class="absolute -top-4 -left-6 w-16 ornament-blend -rotate-12 animate-float-slow">
+                    
+                    <div class="w-56 h-72 rounded-t-[100px] overflow-hidden shadow-xl mb-6 border-[6px] border-[#f7f5f0]">
+                        <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-2630521.webp" alt="Naila" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-title text-3xl mb-1 text-primary font-bold">Naila Azzahra</h4>
+                    <p class="text-[9px] text-gray-400 font-body mb-3 uppercase tracking-widest mt-2">Putri Pertama dari</p>
+                    <p class="font-bold text-primary text-xs font-body leading-relaxed">Bapak Nama_Bapak<br>& Ibu Nama_Ibu</p>
+                    <a href="#" class="mt-4 inline-flex items-center gap-2 text-[10px] font-body text-white bg-accent hover:bg-primary transition-colors px-5 py-2 rounded-full shadow-sm">
+                        <i class="fab fa-instagram"></i> @username
+                    </a>
+                </div>
+
+                <div class="font-title text-5xl text-accent/40 italic font-light">&amp;</div>
+
+                <!-- CPP -->
+                <div class="flex flex-col items-center fade-in-up relative z-10">
+                    <img src="https://attarivitation.com/wp-content/uploads/2026/02/UW-25FEB-159-Audrey-Gigih-branch-2-537x1024.webp" class="absolute top-10 right-0 w-24 ornament-blend transform translate-x-12 scale-x-[-1]">
+                    
+                    <div class="w-56 h-72 rounded-t-[100px] overflow-hidden shadow-xl mb-6 border-[6px] border-[#f7f5f0]">
+                        <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-08230-CPP-e1750323368407.webp" alt="Bagas" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="font-title text-3xl mb-1 text-primary font-bold">Bagas Kurniawan</h4>
+                    <p class="text-[9px] text-gray-400 font-body mb-3 uppercase tracking-widest mt-2">Putra Pertama dari</p>
+                    <p class="font-bold text-primary text-xs font-body leading-relaxed">Bapak Nama_Bapak<br>& Ibu Nama_Ibu</p>
+                    <a href="#" class="mt-4 inline-flex items-center gap-2 text-[10px] font-body text-white bg-accent hover:bg-primary transition-colors px-5 py-2 rounded-full shadow-sm">
+                        <i class="fab fa-instagram"></i> @username
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Bottom Ornament -->
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-3-1-1024x544.webp" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-80 ornament-blend opacity-50 transform translate-y-10">
+        </section>
+
+        <!-- SECTION: EVENT -->
+        <section id="event" class="bg-cardbg rounded-3xl p-6 md:p-10 shadow-sm text-center relative border border-gray-100 fade-in-up">
+            <h2 class="font-title text-4xl text-accent mb-8 italic">Date &<br>Place</h2>
+
+            <!-- Frame Pillars Structure (Special for Heritage Theme) -->
+            <div class="relative py-10 px-4 mt-6 mb-12">
+                <!-- Top Ornament -->
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/UW-25FEB-159-Audrey-Gigih-pillar-top.webp" class="absolute top-0 left-0 w-24">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/UW-25FEB-159-Audrey-Gigih-pillar-top.webp" class="absolute top-0 right-0 w-24 transform scale-x-[-1]">
+                
+                <!-- Pillar repeating backgrounds -->
+                <div class="absolute top-16 bottom-16 left-0 w-6 pillar-left"></div>
+                <div class="absolute top-16 bottom-16 right-0 w-6 pillar-right"></div>
+                
+                <!-- Bottom Ornament -->
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/UW-25FEB-159-Audrey-Gigih-pillar-bottom.webp" class="absolute bottom-0 left-0 w-24">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/UW-25FEB-159-Audrey-Gigih-pillar-bottom.webp" class="absolute bottom-0 right-0 w-24 transform scale-x-[-1]">
+
+                <!-- Content inside Pillars -->
+                <div class="relative z-10 px-6 py-4 flex flex-col gap-10">
+                    
+                    <!-- Countdown inside the pillars -->
+                    <div class="fade-in-up">
+                        <h3 class="font-title text-2xl text-primary font-bold mb-4">Save the Date</h3>
+                        <div class="flex justify-center gap-2 mb-6">
+                            <div class="w-12 h-12 md:w-14 md:h-14 bg-bglight rounded flex flex-col items-center justify-center border border-[#d5c3aa]/40">
+                                <span id="cd-days" class="font-title text-lg font-bold text-accent">00</span>
+                                <span class="text-[8px] uppercase tracking-wider text-gray-500 font-body">Days</span>
+                            </div>
+                            <div class="w-12 h-12 md:w-14 md:h-14 bg-bglight rounded flex flex-col items-center justify-center border border-[#d5c3aa]/40">
+                                <span id="cd-hours" class="font-title text-lg font-bold text-accent">00</span>
+                                <span class="text-[8px] uppercase tracking-wider text-gray-500 font-body">Hours</span>
+                            </div>
+                            <div class="w-12 h-12 md:w-14 md:h-14 bg-bglight rounded flex flex-col items-center justify-center border border-[#d5c3aa]/40">
+                                <span id="cd-minutes" class="font-title text-lg font-bold text-accent">00</span>
+                                <span class="text-[8px] uppercase tracking-wider text-gray-500 font-body">Mins</span>
+                            </div>
+                            <div class="w-12 h-12 md:w-14 md:h-14 bg-bglight rounded flex flex-col items-center justify-center border border-[#d5c3aa]/40">
+                                <span id="cd-seconds" class="font-title text-lg font-bold text-accent">00</span>
+                                <span class="text-[8px] uppercase tracking-wider text-gray-500 font-body">Secs</span>
+                            </div>
+                        </div>
+                        <a href="https://www.google.com/calendar" target="_blank" class="inline-block bg-primary text-white text-[9px] uppercase tracking-widest px-5 py-2 rounded-full hover:bg-accent transition-colors font-body">
+                            <i class="far fa-calendar-alt mr-1"></i> Simpan Kalender
+                        </a>
+                    </div>
+
+                    <!-- Akad -->
+                    <div class="fade-in-up">
+                        <h3 class="font-title text-3xl mb-2 text-primary font-bold">Akad Nikah</h3>
+                        <p class="text-xs font-bold text-gray-700 font-body mb-1">Minggu, 15 Juni 2025</p>
+                        <p class="text-xs text-gray-500 font-body mb-4">08:00 - 10:00 WIB</p>
+                        
+                        <div class="mb-4">
+                            <p class="text-xs font-bold text-primary font-body mb-1">Graha Paramita II, Level 5</p>
+                            <p class="text-[10px] text-gray-500 font-body leading-relaxed max-w-[200px] mx-auto">Jl. Boulevard Bintaro Jaya, Sektor 7, Pondok Aren, Tangerang Selatan</p>
+                        </div>
+                        <a href="https://maps.app.goo.gl/" target="_blank" class="inline-block border border-accent text-accent text-[9px] uppercase tracking-widest px-5 py-2 rounded-full hover:bg-accent hover:text-white transition-colors font-body">
+                            Google Maps
+                        </a>
+                    </div>
+
+                    <div class="w-12 h-px bg-gray-200 mx-auto"></div>
+
+                    <!-- Resepsi -->
+                    <div class="fade-in-up">
+                        <h3 class="font-title text-3xl mb-2 text-primary font-bold">Resepsi</h3>
+                        <p class="text-xs font-bold text-gray-700 font-body mb-1">Minggu, 15 Juni 2025</p>
+                        <p class="text-xs text-gray-500 font-body mb-4">11:00 - 14:00 WIB</p>
+                        
+                        <div class="mb-4">
+                            <p class="text-xs font-bold text-primary font-body mb-1">Graha Paramita II, Grand Ballroom</p>
+                            <p class="text-[10px] text-gray-500 font-body leading-relaxed max-w-[200px] mx-auto">Jl. Boulevard Bintaro Jaya, Sektor 7, Pondok Aren, Tangerang Selatan</p>
+                        </div>
+                        <a href="https://maps.app.goo.gl/" target="_blank" class="inline-block border border-accent text-accent text-[9px] uppercase tracking-widest px-5 py-2 rounded-full hover:bg-accent hover:text-white transition-colors font-body">
+                            Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dresscode & Live Streaming inside the same card below pillars -->
+            <div class="mt-8 pt-8 border-t border-gray-100 fade-in-up">
+                <h3 class="font-title text-3xl text-primary mb-2 italic">A Guide to Attire</h3>
+                <p class="text-[10px] text-gray-500 font-body mb-6 leading-relaxed">Kami dengan hormat menganjurkan para tamu kami untuk mengenakan warna-warna ini untuk hari istimewa kami.</p>
+                <div class="flex justify-center gap-4 mb-10">
+                    <div class="w-8 h-8 rounded-full shadow-inner border border-gray-200" style="background-color: #d1c0a8;"></div>
+                    <div class="w-8 h-8 rounded-full shadow-inner border border-gray-200" style="background-color: #8b5a2b;"></div>
+                    <div class="w-8 h-8 rounded-full shadow-inner border border-gray-200" style="background-color: #f5f5dc;"></div>
+                    <div class="w-8 h-8 rounded-full shadow-inner border border-gray-200" style="background-color: #3d342b;"></div>
+                </div>
+
+                <h3 class="font-title text-3xl text-primary mb-2 italic">Live Streaming</h3>
+                <p class="text-[10px] text-gray-500 font-body mb-6">Momen bahagia proses pernikahan akan kami tayangkan secara virtual melalui platform berikut.</p>
+                <div class="flex flex-col items-center gap-3">
+                    <a href="#" class="border border-accent text-accent px-6 py-2.5 rounded-full text-[10px] uppercase tracking-widest font-bold font-body hover:bg-accent hover:text-white transition w-full max-w-[200px]"><i class="fab fa-instagram mr-2"></i> Live Instagram</a>
+                    <a href="#" class="border border-accent text-accent px-6 py-2.5 rounded-full text-[10px] uppercase tracking-widest font-bold font-body hover:bg-accent hover:text-white transition w-full max-w-[200px]"><i class="fab fa-youtube mr-2"></i> Join Youtube</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: LOVE STORY -->
+        <section id="story" class="bg-cardbg rounded-3xl p-8 md:p-12 shadow-sm text-center relative border border-gray-100 overflow-hidden fade-in-up">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-6.webp" class="absolute top-0 right-0 w-32 ornament-blend transform translate-x-8 -translate-y-8">
+            
+            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-2 font-body">A Story Of</p>
+            <h2 class="font-title text-4xl text-accent mb-6 italic">Journey of Love</h2>
+            <p class="text-xs italic text-gray-500 font-body leading-relaxed mb-10 max-w-xs mx-auto">"Marriage is not a race, it's not about fast or slow. But, who is ready to carry out a great mandate."</p>
+
+            <div class="relative timeline-line text-left px-4 mt-8">
+                <!-- Story 1 -->
+                <div class="relative pl-8 pb-10 fade-in-up">
+                    <div class="absolute left-0 top-1.5 w-4 h-4 bg-white rounded-full -translate-x-[8px] border-[3px] border-accent shadow-sm"></div>
+                    <p class="text-[10px] text-gray-400 font-bold font-body uppercase tracking-widest mb-1">Maret 20XX</p>
+                    <h3 class="font-title text-2xl font-bold text-primary mb-2">Awal Bertemu</h3>
+                    <p class="text-[10px] text-gray-500 font-body leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <!-- Story 2 -->
+                <div class="relative pl-8 pb-10 fade-in-up">
+                    <div class="absolute left-0 top-1.5 w-4 h-4 bg-white rounded-full -translate-x-[8px] border-[3px] border-accent shadow-sm"></div>
+                    <p class="text-[10px] text-gray-400 font-bold font-body uppercase tracking-widest mb-1">Januari 20XX</p>
+                    <h3 class="font-title text-2xl font-bold text-primary mb-2">Menjalin Hubungan</h3>
+                    <p class="text-[10px] text-gray-500 font-body leading-relaxed">Facilisis sed odio morbi quis commodo odio. Condimentum mattis pellentesque id nibh tortor id aliquet.</p>
+                </div>
+                <!-- Story 3 -->
+                <div class="relative pl-8 pb-10 fade-in-up">
+                    <div class="absolute left-0 top-1.5 w-4 h-4 bg-white rounded-full -translate-x-[8px] border-[3px] border-accent shadow-sm"></div>
+                    <p class="text-[10px] text-gray-400 font-bold font-body uppercase tracking-widest mb-1">Agustus 20XX</p>
+                    <h3 class="font-title text-2xl font-bold text-primary mb-2">Bertunangan</h3>
+                    <p class="text-[10px] text-gray-500 font-body leading-relaxed">Nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum. Quis imperdiet massa tincidunt nunc pulvinar.</p>
+                </div>
+                <!-- Story 4 -->
+                <div class="relative pl-8 fade-in-up">
+                    <div class="absolute left-0 top-1.5 w-4 h-4 bg-accent rounded-full -translate-x-[8px] border-[3px] border-white shadow-sm animate-pulse"></div>
+                    <p class="text-[10px] text-accent font-bold font-body uppercase tracking-widest mb-1">Juni 2025</p>
+                    <h3 class="font-title text-2xl font-bold text-primary mb-2">Hari Pernikahan</h3>
+                    <p class="text-[10px] text-gray-500 font-body leading-relaxed">Akhirnya kami memutuskan untuk mengikat janji suci dan melangkah bersama menuju masa depan.</p>
+                </div>
+            </div>
+            
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-3-1024x912.webp" class="absolute bottom-0 left-0 w-32 ornament-blend transform -translate-x-8 translate-y-8">
+        </section>
+
+        <!-- SECTION: GALLERY & VIDEO -->
+        <section id="gallery" class="bg-cardbg rounded-3xl p-6 md:p-8 shadow-sm text-center border border-gray-100 fade-in-up relative overflow-hidden">
+            <h2 class="font-title text-4xl text-accent mb-2 italic mt-4">Our Moment</h2>
+            <p class="text-xs text-gray-500 font-body mb-8 italic px-4">"I was created in time to fill your time, and I use all the time in my life to love you."</p>
+
+            <div class="w-full aspect-video rounded-xl overflow-hidden shadow-sm bg-black mb-8">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/qdUy7cq2fXU?controls=1&autoplay=0&mute=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <div class="columns-2 gap-3 space-y-3 px-2">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-2630557.webp" onclick="openLightbox(this.src)" class="w-full rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-sm border-[3px] border-[#f7f5f0]">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-08023.webp" onclick="openLightbox(this.src)" class="w-full rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-sm border-[3px] border-[#f7f5f0]">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-2610768.webp" onclick="openLightbox(this.src)" class="w-full rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-sm border-[3px] border-[#f7f5f0]">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-2620400.webp" onclick="openLightbox(this.src)" class="w-full rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-sm border-[3px] border-[#f7f5f0]">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-2620623.webp" onclick="openLightbox(this.src)" class="w-full rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-sm border-[3px] border-[#f7f5f0]">
+                <img src="https://attarivitation.com/wp-content/uploads/2026/02/Bagas-Naila-LIBLOP-PICTURE-2630161.webp" onclick="openLightbox(this.src)" class="w-full rounded-xl object-cover cursor-pointer hover:opacity-80 transition-opacity shadow-sm border-[3px] border-[#f7f5f0]">
+            </div>
+            
+            <div class="mt-8 mb-4">
+                <a href="#" class="inline-flex items-center gap-2 bg-primary text-white text-[10px] px-6 py-2.5 rounded-full hover:bg-accent transition-colors font-body uppercase tracking-widest">
+                    <i class="fab fa-instagram"></i> Wedding Frame
+                </a>
+            </div>
+        </section>
+
+        <!-- SECTION: WISHES (RSVP) -->
+        <section id="wishes" class="bg-cardbg rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100 fade-in-up relative overflow-hidden">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-6.webp" class="absolute top-0 left-0 w-32 ornament-blend transform -translate-x-6 -translate-y-6">
+
+            <div class="text-center mb-8 relative z-10">
+                <h2 class="font-title text-4xl text-primary font-bold mb-2">Rsvp</h2>
+                <p class="text-[10px] text-gray-500 font-body leading-relaxed max-w-[250px] mx-auto">Bagi tamu undangan yang akan hadir di acara pernikahan kami silahkan kirimkan konfirmasi kehadiran dengan mengisi form berikut.</p>
+            </div>
+            
+            <form onsubmit="event.preventDefault(); alert('Demo: Pesan Anda berhasil dikirim!');" class="flex flex-col gap-4 mb-10 relative z-10">
+                <input type="text" required class="w-full px-4 py-3 bg-bglight border border-[#d5c3aa]/40 focus:outline-none focus:border-accent text-xs font-body rounded-none" placeholder="Nama Lengkap">
+                <select required class="w-full px-4 py-3 bg-bglight border border-[#d5c3aa]/40 focus:outline-none focus:border-accent text-xs font-body rounded-none">
+                    <option value="">Konfirmasi Kehadiran</option>
+                    <option value="Hadir">Hadir</option>
+                    <option value="Tidak Hadir">Tidak Hadir</option>
+                </select>
+                <select class="w-full px-4 py-3 bg-bglight border border-[#d5c3aa]/40 focus:outline-none focus:border-accent text-xs font-body rounded-none">
+                    <option value="">Jumlah Tamu Hadir</option>
+                    <option value="1 Orang">1 Orang</option>
+                    <option value="2 Orang">2 Orang</option>
+                </select>
+                <textarea required rows="4" class="w-full px-4 py-3 bg-bglight border border-[#d5c3aa]/40 focus:outline-none focus:border-accent text-xs font-body resize-none rounded-none" placeholder="Tuliskan ucapan dan doa..."></textarea>
+                <button type="submit" class="w-full bg-primary hover:bg-accent text-white font-body py-3 transition-colors text-[10px] font-bold tracking-widest uppercase mt-2">Kirim Ucapan</button>
+            </form>
+
+            <div class="bg-white p-5 border border-[#d5c3aa]/40 max-h-64 overflow-y-auto relative z-10">
+                <p class="text-[10px] font-bold text-primary font-body mb-4 uppercase tracking-widest"><i class="fas fa-comments text-accent mr-1"></i> 2 Ucapan</p>
+                
+                <div class="mb-4 pb-4 border-b border-gray-100 last:border-0">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-7 h-7 bg-accent text-white flex items-center justify-center font-bold text-[10px]">A</div>
+                        <div>
+                            <h5 class="font-bold text-xs text-primary font-body">Amanda</h5>
+                            <span class="text-[8px] text-green-700 font-body uppercase tracking-wider"><i class="fas fa-check-circle"></i> Hadir</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-600 font-body leading-relaxed">Selamat berbahagia! Semoga lancar sampai hari H dan menjadi keluarga yang sakinah mawaddah warahmah.</p>
+                </div>
+
+                <div class="mb-2 pb-2 border-b border-gray-100 last:border-0">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-7 h-7 bg-primary text-white flex items-center justify-center font-bold text-[10px]">R</div>
+                        <div>
+                            <h5 class="font-bold text-xs text-primary font-body">Reza</h5>
+                            <span class="text-[8px] text-red-600 font-body uppercase tracking-wider"><i class="fas fa-times-circle"></i> Absen</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-600 font-body leading-relaxed">Maaf belum bisa hadir. Doa terbaik untuk kalian berdua ya!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: GIFT -->
+        <section id="gift" class="bg-cardbg rounded-3xl p-8 md:p-10 shadow-sm text-center border border-gray-100 fade-in-up relative overflow-hidden">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-5.webp" class="absolute bottom-0 right-0 w-32 ornament-blend transform translate-x-6 translate-y-6">
+            
+            <i class="fas fa-gift text-3xl text-accent mb-4"></i>
+            <h2 class="font-title text-4xl text-primary font-bold mb-4">Wedding Gift</h2>
+            <p class="text-[10px] text-gray-500 font-body leading-relaxed mb-8 max-w-[280px] mx-auto">Doa Restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara digital.</p>
+
+            <div class="flex justify-center gap-3 mb-8">
+                <button onclick="toggleGift('amplop')" class="border border-accent text-accent hover:bg-accent hover:text-white px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold font-body transition-colors">
+                    <i class="fas fa-credit-card mr-1"></i> E-Amplop
+                </button>
+                <button onclick="toggleGift('kado')" class="bg-primary text-white hover:bg-accent px-5 py-2.5 text-[10px] uppercase tracking-widest font-bold font-body transition-colors">
+                    <i class="fas fa-box mr-1"></i> Gift Registry
+                </button>
+            </div>
+
+            <!-- E-Amplop -->
+            <div id="amplopContainer" class="flex flex-col gap-4 relative z-10">
+                <div class="bg-bglight p-6 border border-[#d5c3aa]/40 flex flex-col items-center">
+                    <img src="https://attarivitation.com/wp-content/uploads/2025/06/Bank-BCA-Logo-PNG-480p-FileVector69-300x98.png" alt="BCA" class="h-6 mb-4 object-contain">
+                    <p class="text-[9px] text-gray-500 font-body uppercase tracking-widest mb-1">Nomor Rekening</p>
+                    <p class="font-title text-2xl font-bold text-primary mb-3">0123 456 789</p>
+                    <p class="text-[9px] text-gray-500 font-body uppercase tracking-widest mb-1">Atas Nama</p>
+                    <p class="font-bold text-primary text-xs font-body mb-4">Nama Penerima</p>
+                    <button onclick="copyText('0123456789')" class="text-[9px] bg-white border border-gray-200 hover:border-accent text-gray-700 px-5 py-2 font-bold uppercase tracking-widest transition-colors shadow-sm">
+                        Salin Rekening
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kirim Kado -->
+            <div id="kadoContainer" class="hidden relative z-10">
+                <div class="bg-bglight p-6 border border-[#d5c3aa]/40 flex flex-col items-center">
+                    <i class="fas fa-map-marker-alt text-2xl text-accent mb-3"></i>
+                    <p class="font-bold text-primary text-[10px] font-body mb-2 uppercase tracking-widest">Alamat Penerima</p>
+                    <p class="text-[10px] text-gray-500 font-body leading-relaxed mb-4 max-w-[200px]">Jl. Lorem Ipsum No. 21, Dolor, Sit Amet, Kota Bandung, 40XXX</p>
+                    <button onclick="copyText('Jl. Lorem Ipsum No. 21, Dolor, Sit Amet, Kota Bandung, 40XXX')" class="text-[9px] bg-white border border-gray-200 hover:border-accent text-gray-700 px-5 py-2 font-bold uppercase tracking-widest transition-colors shadow-sm">
+                        Salin Alamat
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-primary rounded-3xl p-10 text-center text-white relative overflow-hidden shadow-sm fade-in-up mt-6 border-t-4 border-accent">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-6.webp" class="absolute top-0 right-0 w-32 ornament-blend transform translate-x-8 -translate-y-8 opacity-20 invert">
+            <img src="https://attarivitation.com/wp-content/uploads/2026/02/Illustrasi-01-Orn-3-1024x912.webp" class="absolute bottom-0 left-0 w-40 ornament-blend transform -translate-x-10 translate-y-10 opacity-20 invert">
+            
+            <h2 class="font-title text-4xl text-accent mb-4 font-bold relative z-10">Terima Kasih</h2>
+            <p class="text-[10px] font-body opacity-80 mb-6 leading-relaxed max-w-[200px] mx-auto relative z-10">Atas Kehadiran dan Doa Restunya kami ucapkan terima kasih.</p>
+            <p class="text-[9px] font-body uppercase tracking-[0.2em] text-[#d5c3aa] mb-2 relative z-10">Kami yang Berbahagia,</p>
+            <h3 class="font-title text-3xl mb-10 relative z-10">Bagas &amp; Naila</h3>
+
+            <div class="pt-6 border-t border-white/10 relative z-10">
+                <p class="font-body tracking-[0.2em] uppercase text-[8px] mb-2 opacity-50">Digital Wedding Invitation © 2026</p>
+                <a href="#" class="font-title text-xl text-accent hover:text-white transition-colors">Ysiroo.id</a>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-[200] bg-black/95 hidden flex flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-4xl w-12 h-12 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-colors">&times;</button>
+        <img id="lightboxImg" src="" class="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl">
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // DOM Elements
+        const coverPage = document.getElementById('coverPage');
+        const mainContent = document.getElementById('mainContent');
+        const bottomNav = document.getElementById('bottomNav');
+        const floatingControls = document.getElementById('floatingControls');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+
+        // State variables
+        let isPlaying = false;
+        let invitationOpened = false;
+
+        // --- 1. OPEN INVITATION LOGIC ---
+        function openInvitation() {
+            if (invitationOpened) return;
+            invitationOpened = true;
+
+            // Slide Cover Up
+            coverPage.classList.add('cover-open');
+            
+            // Show Main Content & Nav
+            mainContent.classList.remove('opacity-0', 'pointer-events-none');
+            mainContent.classList.add('opacity-100');
+            bottomNav.classList.remove('opacity-0', 'pointer-events-none');
+            bottomNav.classList.add('opacity-100');
+            floatingControls.classList.remove('opacity-0', 'pointer-events-none');
+            floatingControls.classList.add('opacity-100');
+
+            // Play music
+            playAudio();
+
+            // Scroll Top
+            mainContent.scrollTo(0, 0);
+
+            // Initialize scroll animations
+            setTimeout(() => {
+                const observer = new IntersectionObserver(handleIntersect, { threshold: 0.1 });
+                document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+            }, 500);
+        }
+
+        // --- 2. MUSIC LOGIC ---
+        function playAudio() {
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                musicIcon.classList.remove('fa-compact-disc');
+                musicIcon.classList.add('fa-pause');
+                musicIcon.classList.remove('animate-spin-slow');
+            }).catch(e => console.log("Autoplay blocked:", e));
+        }
+
+        function pauseAudio() {
+            bgMusic.pause();
+            isPlaying = false;
+            musicIcon.classList.add('fa-compact-disc');
+            musicIcon.classList.remove('fa-pause');
+            musicIcon.classList.add('animate-spin-slow');
+        }
+
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) pauseAudio();
+            else playAudio();
+        });
+
+        // --- 3. BACKGROUND SLIDER ---
+        function setupSlider() {
+            const slides = document.querySelectorAll('.bg-slide-img');
+            if(slides.length <= 1) return;
+            let currentIdx = 0;
+            setInterval(() => {
+                slides[currentIdx].classList.remove('active');
+                currentIdx = (currentIdx + 1) % slides.length;
+                slides[currentIdx].classList.add('active');
+            }, 4000);
+        }
+        setupSlider();
+
+        // --- 4. COUNTDOWN LOGIC ---
+        const targetDate = new Date("June 15, 2025 08:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance > 0) {
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('cd-days').innerText = d.toString().padStart(2, '0');
+                document.getElementById('cd-hours').innerText = h.toString().padStart(2, '0');
+                document.getElementById('cd-minutes').innerText = m.toString().padStart(2, '0');
+                document.getElementById('cd-seconds').innerText = s.toString().padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- 5. INTERSECTION OBSERVER FOR ANIMATION & NAV HIGHLIGHT ---
+        function handleIntersect(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }
+
+        // Active Nav Pill Highlight
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(".nav-pill-btn");
+
+        mainContent.addEventListener("scroll", () => {
+            let current = "";
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (mainContent.scrollTop >= sectionTop - 150) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach((a) => {
+                a.classList.remove("active");
+                if (a.getAttribute("href").includes(current)) {
+                    a.classList.add("active");
+                }
+            });
+        });
+
+        // Smooth scroll for nav pill links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if(targetSection) {
+                    mainContent.scrollTo({
+                        top: targetSection.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // --- 6. GIFT TOGGLE & COPY TEXT ---
+        function toggleGift(type) {
+            const amplop = document.getElementById('amplopContainer');
+            const kado = document.getElementById('kadoContainer');
+            if(type === 'amplop') {
+                amplop.classList.remove('hidden');
+                amplop.classList.add('flex');
+                kado.classList.add('hidden');
+                kado.classList.remove('flex');
+            } else {
+                kado.classList.remove('hidden');
+                kado.classList.add('flex');
+                amplop.classList.add('hidden');
+                amplop.classList.remove('flex');
+            }
+        }
+
+        function copyText(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Berhasil Disalin: ' + text);
+        }
+
+        // --- 7. LIGHTBOX LOGIC ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxImg.src = "";
+            }, 300);
+        }
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+    </script>
+</body>
+</html>
